@@ -6,9 +6,9 @@
 <meta name="theme-color" content="#1F6F78"><meta name="description" content="Gentle brain games for memory, numbers, logic and shapes."><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icon.svg"><title>Mind Garden – Brain Games</title>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Noto+Sans+SC:wght@400;700&amp;display=swap" rel="stylesheet">
 <style>
-:root{--bg:#E6F0F3;--bg2:#D3E6EA;--ink:#12303F;--soft:#46667A;--panel:#FFFFFF;--back:#1F6F78;--back2:#2A8791;--sun:#F2B632;--sunink:#3A2A00;--leaf:#2F8F6B;--bad:#B5483A;--line:#B9D0D8;--fs:1}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F2229;--bg2:#163039;--ink:#EAF4F6;--soft:#9DBBC6;--panel:#1B3841;--back:#2A8791;--back2:#38A0AA;--line:#2D5360;--sunink:#2A1E00}}
-:root[data-theme="dark"]{--bg:#0F2229;--bg2:#163039;--ink:#EAF4F6;--soft:#9DBBC6;--panel:#1B3841;--back:#2A8791;--back2:#38A0AA;--line:#2D5360;--sunink:#2A1E00}
+:root{--bg:#E6F0F3;--bg2:#D3E6EA;--ink:#12303F;--soft:#3A5A6E;--panel:#FFFFFF;--back:#1F6F78;--back2:#2A8791;--sun:#F2B632;--sunink:#3A2A00;--leaf:#2F8F6B;--bad:#B5483A;--line:#B9D0D8;--fs:1}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F2229;--bg2:#163039;--ink:#EAF4F6;--soft:#9DBBC6;--panel:#22444F;--back:#2A8791;--back2:#38A0AA;--line:#2D5360;--sunink:#2A1E00}}
+:root[data-theme="dark"]{--bg:#0F2229;--bg2:#163039;--ink:#EAF4F6;--soft:#9DBBC6;--panel:#22444F;--back:#2A8791;--back2:#38A0AA;--line:#2D5360;--sunink:#2A1E00}
 *{box-sizing:border-box}
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;min-height:100%;background:linear-gradient(var(--bg),var(--bg2));color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,Tahoma,sans-serif;font-size:calc(1.25rem*var(--fs));line-height:1.45;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);-webkit-tap-highlight-color:transparent;user-select:none}
@@ -108,8 +108,26 @@ h1{font-size:calc(2rem*var(--fs))}.top{align-items:flex-start}.tools{width:100%}
 .top{flex-direction:column;align-items:stretch}.tools{order:-1;width:100%;justify-content:center}.top h1{width:100%;text-align:center;margin:.5em 0 .1em}.sub{margin:0 auto 20px;text-align:center}.decks{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 6px}.decks b{margin-right:4px}
 body,button,input{font-family:"Atkinson Hyperlegible","Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC","WenQuanYi Micro Hei",Verdana,Tahoma,sans-serif}
 h2.sec,.tip{text-align:center}.garden{justify-content:center;text-align:center}.decks{justify-content:center}.tip{max-width:34em;margin:22px auto 0}
-.tools .btn,.decks .btn{min-height:36px;padding:2px 12px;font-size:.8em;font-weight:400;border-width:2px;border-radius:12px}.tools{gap:8px}.decks{gap:8px}.decks b{font-size:.9em}
+.tools .btn,.decks .btn{min-height:36px;padding:2px 12px;font-size:.8em;font-weight:400;border-width:2px;border-radius:12px}.tools{gap:8px}.decks{gap:14px 12px;margin:12px 0 20px}.decks .btn{padding:2px 16px}.decks b{font-size:.9em}
 .big.on,button.big:active,.lv:not([disabled]):active,.btn:not(.main):active{background:var(--sun);color:var(--sunink)}button.big:active{transform:scale(.96)}
+
+/* section accents */
+#home h2.sec:nth-of-type(1),#acts{--ac:#2F8F6B}#home h2.sec:nth-of-type(2),#acts2{--ac:#3B6FB6}#home h2.sec:nth-of-type(3),#acts3{--ac:#A8641A}#home h2.sec:nth-of-type(4),#levels{--ac:#7D5BA6}
+h2.sec::after{content:"";display:block;width:56px;height:5px;border-radius:3px;margin:8px auto 0;background:var(--ac,var(--leaf))}
+.lv{border-width:2px;border-left:8px solid var(--ac,var(--line))}
+.levels .lv .n{background:var(--ac,var(--leaf))!important}.lv[disabled] .n{background:var(--soft)!important}
+/* quieter secondary controls, strong primary */
+.btn,.pill,.garden{border-width:2px}.btn.main{border-width:3px}
+html[data-hc="1"] .btn,html[data-hc="1"] .pill,html[data-hc="1"] .garden{border-width:3px}html[data-hc="1"] .lv{border-width:3px 3px 3px 8px}
+/* answer feedback (colour + symbol) */
+.big{position:relative}.big.right,.big.wrong{transform:none;color:var(--ink)}
+.big.right{background:color-mix(in srgb,var(--leaf) 24%,var(--panel));border-color:var(--leaf)}
+.big.wrong{background:color-mix(in srgb,var(--bad) 20%,var(--panel));border-color:var(--bad)}
+.big.right::after,.big.wrong::after{position:absolute;top:6px;right:10px;font-size:.4em;font-weight:700}
+.big.right::after{content:"✓";color:var(--leaf)}.big.wrong::after{content:"✗";color:var(--bad)}
+/* screen fade */
+@keyframes fi{from{opacity:0;transform:translateY(6px)}}#home,#game,#mini{animation:fi .25s ease-out}
+@media (prefers-reduced-motion:reduce){#home,#game,#mini{animation:none}}
 </style>
 </head>
 <body>
@@ -183,7 +201,7 @@ function renderHome(){
   LEVELS.forEach(function(L,i){
     var open=i<save.unlocked,st=save.stars[i]||0,str="";
     for(var k=0;k<3;k++)str+=k<st?"★":"☆";
-    h+='<button class="lv" data-i="'+i+'"'+(open?"":" disabled")+'><span class="n">'+(i+1)+'</span><b>'+(LN[save.deck||"garden"]||LN.garden)[i]+'</b><small>'+L.p+' pairs · '+fmt(L.t)+(open?"":" · locked")+'</small><span class="pv" aria-hidden="true">'+icons().slice(0,Math.min(L.p,5)).map(function(x){return x.e}).join(" ")+'</span><span class="st" aria-label="'+st+' of 3 stars">'+str+'</span></button>';
+    h+='<button class="lv" data-i="'+i+'"'+(open?"":" disabled")+'><span class="n">'+(open?(i+1):"🔒")+'</span><b>'+(LN[save.deck||"garden"]||LN.garden)[i]+'</b><small>'+L.p+' pairs · '+fmt(L.t)+(open?"":" · locked")+'</small><span class="pv" aria-hidden="true">'+icons().slice(0,Math.min(L.p,5)).map(function(x){return x.e}).join(" ")+'</span><span class="st" aria-label="'+st+' of 3 stars">'+str+'</span></button>';
   });
   $("levels").innerHTML=h;renderExtra();
 }
@@ -344,7 +362,7 @@ function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1))}
 function numOpts(ans){var c=[ans],ds=shuffle([1,-1,2,-2,3,-3,10,-10]);for(var i=0;i<ds.length&&c.length<4;i++){var v=ans+ds[i];if(v>=0&&c.indexOf(v)<0)c.push(v)}return shuffle(c).map(function(n){return{v:n,h:n}})}
 function ask(top,opts,ans,okm,badm,txt){
   $("mp").innerHTML=top+'<div class="gridm" style="--c:'+opts.length+'">'+opts.map(function(o){return '<button class="big'+(txt?' txt'+(txt===2?' nm':''):'')+'" data-a="'+esc(o.v)+'" aria-label="'+esc(o.l||o.v)+'">'+o.h+'</button>'}).join("")+'</div>';
-  mg.h=function(b){var ok=b.dataset.a===String(ans);res(ok,ok?okm:badm)};
+  mg.ans=String(ans);mg.h=function(b){var ok=b.dataset.a===String(ans);res(ok,ok?okm:badm)};
 }
 function rNum(){
   var r=mg.r,t=rnd(0,r<3?0:r<5?1:2),q=[],a,d,i;
@@ -407,7 +425,7 @@ function rDiff(){
   var cell=function(x,i,btn){return btn?'<button class="big sm" data-a="'+i+'" aria-label="Picture '+(i+1)+'">'+x.e+'</button>':'<div class="big st sm">'+x.e+'</div>'};
   var right=it.map(function(x,i){return i===k?extra:x});
   $("mp").innerHTML='<div class="dp"><div class="gridm" style="--c:'+cols+'">'+it.map(function(x,i){return cell(x,i)}).join("")+'</div><div class="gridm" style="--c:'+cols+'">'+right.map(function(x,i){return cell(x,i,1)}).join("")+'</div></div>';
-  $("mmsg").textContent="One picture on the right is different. Tap it.";
+  $("mmsg").textContent="One picture on the right is different. Tap it.";mg.ans=String(k);
   var bs=$("mp").querySelectorAll("button");
   g.h=function(b){if(+b.dataset.a===k){lit(bs[k],1500);return res(true,"Yes – you spotted it!")}tries++;if(tries>1){lit(bs[k],2000);return res(false,"It was the one that flashed. Well tried!")}$("mmsg").textContent="Not that one – look again."};
 }
@@ -438,11 +456,13 @@ function startMG(t){
 function nextR(){
   if(!mg)return;
   if(mg.r>=mg.R)return mdone();
-  mg.r++;mg.h=null;$("hRound").textContent="Round "+mg.r+" of "+mg.R;$("mp").innerHTML="";
+  mg.r++;mg.h=null;mg.ans=null;mg.last=null;$("hRound").textContent="Round "+mg.r+" of "+mg.R;$("mp").innerHTML="";
   ({seq:rSeq,miss:rMiss,sort:rSort,num:rNum,sum:rSum,odd:rOdd,shp:rShp,tbl:rTbl,clk:rClk,diff:rDiff,wrd:rWrd,wm:rWm})[mg.t]();
 }
 function res(good,note){
   var g=mg;g.h=null;if(good)g.ok++;if(g.t==="seq"||g.t==="miss")g.n=Math.max(g.lo,Math.min(8,g.n+(good?1:-1)));
+  var ch=g.last;if(g.t==="wrd")ch=null;
+  if(ch&&ch.isConnected){ch.classList.add(good?"right":"wrong");if(!good&&g.ans!=null)[].forEach.call($("mp").querySelectorAll("[data-a]"),function(x){if(x.dataset.a===g.ans)x.classList.add("right")})}
   good?chime():beep(300,.3,"triangle");$("mmsg").textContent=note;
   setTimeout(function(){if(mg===g)nextR()},1900);
 }
@@ -467,22 +487,23 @@ function rMiss(){
     var opts=shuffle([it[m]].concat(pick(it.filter(function(x,i){return i!==m}),Math.min(3,n-1))));
     $("mp").innerHTML='<div class="gridm" style="--c:'+cols+'">'+it.map(function(x,i){return i===m?'<div class="big st q">?</div>':cell(x)}).join("")+'</div><div class="gridm" style="--c:'+opts.length+'">'+opts.map(function(x){return '<button class="big" data-a="'+x.e+'" aria-label="'+x.n+'">'+x.e+'</button>'}).join("")+'</div>';
     $("mmsg").textContent="One has disappeared. Which one was it?";
-    g.h=function(x){var ok=x.dataset.a===it[m].e;say(it[m].n);res(ok,ok?"Yes – the "+it[m].n+"!":"It was the "+it[m].n+". Well tried!")};
+    g.ans=it[m].e;g.h=function(x){var ok=x.dataset.a===it[m].e;say(it[m].n);res(ok,ok?"Yes – the "+it[m].n+"!":"It was the "+it[m].n+". Well tried!")};
   })();
 }
 function rSort(){
   var ks=pick(Object.keys(CATS),mg.r<4?2:3),a=ks[Math.floor(Math.random()*ks.length)],x=P(CATS[a][Math.floor(Math.random()*5)]);
   $("mp").innerHTML='<div class="big st one">'+x.e+'</div><div class="gridm" style="--c:'+ks.length+'">'+ks.map(function(k){return '<button class="big txt" data-a="'+k+'">'+k+'</button>'}).join("")+'</div>';
   $("mmsg").textContent="Which group does the "+x.n+" belong to?";say(x.n);
-  mg.h=function(b){var ok=b.dataset.a===a;res(ok,ok?"Yes – well done!":"It goes with “"+a+"”. Well tried!")};
+  mg.ans=a;mg.h=function(b){var ok=b.dataset.a===a;res(ok,ok?"Yes – well done!":"It goes with “"+a+"”. Well tried!")};
 }
-$("mp").addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(b&&!b.disabled&&b.classList.contains("big"))lit(b,450);if(b&&mg&&mg.h)mg.h(b)});
+$("mp").addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(b&&!b.disabled&&b.classList.contains("big"))lit(b,450);if(b&&mg&&mg.h){mg.last=b;mg.h(b)}});
 $("bMn").onclick=function(){mg=null;toHome()};
 function mdone(){
   var g=mg,secs=Math.round((Date.now()-mt0)/1000);logPlay(g.t,g.ok/g.R,secs);win();
   overlay('<h2>Well done!</h2><p>You got '+g.ok+' of '+g.R+' right.</p><div class="row"><button class="btn main" id="ma">Play again</button><button class="btn" id="mm">Menu</button></div>');
   $("ma").onclick=function(){startMG(g.t)};$("mm").onclick=function(){mg=null;toHome()};
 }
+addEventListener("resize",function(){var g=$("grid");if($("game").classList.contains("hidden")||!g.children.length)return;var c=COLS[LEVELS[cur].p],rows=Math.ceil(g.children.length/c);g.style.setProperty("--mw",Math.min(1050,c*Math.min(190,(innerHeight-230)/rows))+"px")});
 $("bPl").onclick=openPl;$("bSet").onclick=openSet;$("bFam").onclick=famView;
 load();applyPrefs();renderHome();
 </script>
