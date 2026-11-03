@@ -128,6 +128,21 @@ html[data-hc="1"] .btn,html[data-hc="1"] .pill,html[data-hc="1"] .garden{border-
 /* screen fade */
 @keyframes fi{from{opacity:0;transform:translateY(6px)}}#home,#game,#mini{animation:fi .25s ease-out}
 @media (prefers-reduced-motion:reduce){#home,#game,#mini{animation:none}}
+
+/* tone down yellow: primary actions, stars and hints only */
+.f.a{border-color:var(--back)}.big{border-color:var(--back)}
+.tg[aria-pressed="true"]{background:var(--back);color:#fff}
+.btn:not(.main):active,.lv:not([disabled]):active{background:var(--bg2);color:var(--ink)}
+/* hud icons, dots, collapsible headers, continue card, leaderboard */
+.hud .ic{min-width:48px;padding:2px 10px;font-size:1.15em}.hud #bPause{margin-left:auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.dots i{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid var(--back);margin:0 3px;vertical-align:middle}
+.dots i.c{background:var(--back)}.dots i.d{background:var(--leaf);border-color:var(--leaf)}.dots i.m{background:var(--soft);border-color:var(--soft)}
+h2.sec{cursor:pointer}h2.sec::before{content:"▾";margin-right:.4em;color:var(--ac,var(--leaf))}h2.sec[aria-expanded="false"]::before{content:"▸"}
+#cont{--ac:var(--back);margin-bottom:12px}#cont .lv{width:100%;border-left-color:var(--sun)}
+select{font:inherit;width:100%;min-height:52px;border:2px solid var(--ink);border-radius:12px;background:var(--panel);color:var(--ink);padding:6px 10px;margin-top:6px}
+.lbr{display:grid;grid-template-columns:2.2em 1fr auto;gap:10px;align-items:center;padding:10px 14px;border:2px solid var(--line);border-radius:14px;text-align:left}
+.lbr.me{border-color:var(--leaf);background:color-mix(in srgb,var(--leaf) 12%,var(--panel))}.lbr span:last-child{text-align:right;font-weight:700}.lbr .rk{font-size:1.3em}
 </style>
 </head>
 <body>
@@ -135,26 +150,26 @@ html[data-hc="1"] .btn,html[data-hc="1"] .pill,html[data-hc="1"] .garden{border-
 <section id="home">
   <div class="top"><h1>Mind Garden</h1>
     <div class="tools">
-      <button class="btn sm" id="bPl"></button><button class="btn sm" id="bFam">Family view</button>
+      <button class="btn sm" id="bPl"></button><button class="btn sm" id="bFam">Family view</button><button class="btn sm" id="bLb">Leaderboard</button>
       <button class="btn sm" id="bSet">Settings</button><button class="btn sm" id="bLang" aria-label="Language / 语言"></button>
     </div></div>
   <p class="sub">Gentle games for memory, numbers, logic and shapes. Take your time – there are no wrong turns here. Play a little each day and watch your garden grow.</p>
-  <div class="garden" id="garden"></div><h2 class="sec">Memory games</h2><div class="levels" id="acts"></div><h2 class="sec">Numbers, logic and shapes</h2><div class="levels" id="acts2"></div><h2 class="sec">Words</h2><div class="levels" id="acts3"></div><h2 class="sec" id="mph">Matching pairs</h2><div class="decks" id="decks"></div><div class="levels" id="levels"></div>
+  <div id="cont" class="hidden"></div><div class="garden" id="garden"></div><h2 class="sec">Memory games</h2><div class="levels" id="acts"></div><h2 class="sec">Numbers, logic and shapes</h2><div class="levels" id="acts2"></div><h2 class="sec">Words</h2><div class="levels" id="acts3"></div><h2 class="sec" id="mph">Matching pairs</h2><div class="decks" id="decks"></div><div class="levels" id="levels"></div>
   <p class="tip">Playing a little each day keeps the mind active. Short, regular sessions work best.</p>
 </section>
 
 <section id="game" class="hidden">
   <div class="hud">
-    <button class="btn sm" id="bHome">Menu</button>
+    <button class="btn sm ic" id="bHome" aria-label="Menu">☰</button>
     <span class="pill" id="hLv"></span>
     <div class="bar" role="progressbar" aria-label="Time left"><i id="tb"></i></div>
     <span class="pill" id="hTime">0:00</span>
     <span class="pill" id="hPairs"></span>
     <button class="btn sm" id="bHint"></button>
-    <button class="btn sm" id="bPause">Pause</button>
+    <button class="btn sm ic" id="bPause" aria-label="Pause">⏸</button>
   </div>
   <div class="msg" id="msg" aria-live="polite"></div>
-  <div class="grid" id="grid"></div></section><section id="mini" class="hidden"><div class="hud"><button class="btn sm" id="bMn">Menu</button><span class="pill" id="hLv2"></span><span class="pill" id="hRound"></span></div><div class="msg" id="mmsg" aria-live="polite"></div><div id="mp"></div>
+  <div class="grid" id="grid"></div></section><section id="mini" class="hidden"><div class="hud"><button class="btn sm ic" id="bMn" aria-label="Menu">☰</button><span class="pill" id="hLv2"></span><span class="pill" id="hRound"></span></div><div class="msg" id="mmsg" aria-live="polite"></div><div id="mp"></div>
 </section>
 </div>
 
@@ -212,7 +227,7 @@ function closeOv(){$("ov").classList.add("hidden")}
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
 
 function start(i){
-  clearInterval(timer);closeOv();cur=i;var L=LEVELS[i];
+  clearInterval(timer);closeOv();cur=i;me().lg={k:"p",i:i};persist();var L=LEVELS[i];
   var bonus=(fails[i]||0)>=1?15*Math.min(fails[i],3):0; // extra time after a miss
   total=L.t+bonus;left=total;found=0;first=null;lock=true;paused=false;hints=3;streak=0;
   var D=icons().slice(0,L.p),deck=shuffle(D.concat(D));
@@ -224,7 +239,7 @@ function start(i){
   $("hPairs").textContent="0 / "+L.p+" pairs";
   $("hTime").textContent=fmt(left);
   $("tb").style.transform="scaleX(1)";$("tb").classList.remove("low");
-  $("bHint").textContent="Hint ("+hints+")";$("bPause").textContent="Pause";
+  $("bHint").textContent="Hint ("+hints+")";$("bPause").textContent="⏸";
   show("game");
   var n=L.peek;
   (function tick(){
@@ -280,7 +295,7 @@ function toHome(){clearInterval(timer);closeOv();renderHome();show("home")}
 $("bHome").onclick=function(){if(!$("ov").classList.contains("hidden"))return;paused=true;overlay('<h2>Leave this game?</h2><p>Your progress in this round will be lost.</p><div class="row"><button class="btn main" id="st">Stay</button><button class="btn" id="lv">Leave</button></div>');$("st").onclick=function(){paused=false;closeOv()};$("lv").onclick=function(){paused=false;toHome()}};
 
 function end(ok){
-  var L=LEVELS[cur],used=1-left/total,html;logPlay("pairs",ok?1:found/L.p,total-left);
+  var L=LEVELS[cur],used=1-left/total,html;logPlay("pairs",ok?1:found/L.p,total-left);award(found,ok?"p"+(cur+1):null,total-left);
   if(ok){
     var st=used<.5?3:used<.8?2:1;
     save.stars[cur]=Math.max(save.stars[cur]||0,st);
@@ -450,17 +465,17 @@ function pick(a,n){return shuffle(a.slice()).slice(0,n)}
 function lit(el,ms){el.classList.add("on");setTimeout(function(){el.classList.remove("on")},ms||300)}
 function startMG(t){
   try{ac&&ac.resume()}catch(x){}
-  mg={t:t,r:0,R:t==="sort"?8:6,ok:0,n:t==="seq"?3:4,lo:t==="seq"?2:4,h:null};mt0=Date.now();
+  mg={t:t,r:0,R:t==="sort"?8:6,ok:0,n:t==="seq"?3:4,lo:t==="seq"?2:4,h:null,hist:[]};mt0=Date.now();me().lg={k:t};persist();
   closeOv();show("mini");$("hLv2").textContent=MG[t].n;nextR();
 }
 function nextR(){
   if(!mg)return;
   if(mg.r>=mg.R)return mdone();
-  mg.r++;mg.h=null;mg.ans=null;mg.last=null;$("hRound").textContent="Round "+mg.r+" of "+mg.R;$("mp").innerHTML="";
+  mg.r++;mg.h=null;mg.ans=null;mg.last=null;$("hRound").innerHTML='<span class="sr">Round '+mg.r+' of '+mg.R+'</span><span class="dots" aria-hidden="true">'+mg.hist.concat(new Array(mg.R-mg.hist.length).fill(null)).map(function(x,i){return"<i class=\""+(x===true?"d":x===false?"m":i===mg.r-1?"c":"")+"\"></i>"}).join("")+"</span>";$("mp").innerHTML="";
   ({seq:rSeq,miss:rMiss,sort:rSort,num:rNum,sum:rSum,odd:rOdd,shp:rShp,tbl:rTbl,clk:rClk,diff:rDiff,wrd:rWrd,wm:rWm})[mg.t]();
 }
 function res(good,note){
-  var g=mg;g.h=null;if(good)g.ok++;if(g.t==="seq"||g.t==="miss")g.n=Math.max(g.lo,Math.min(8,g.n+(good?1:-1)));
+  var g=mg;g.h=null;g.hist.push(!!good);if(good)g.ok++;if(g.t==="seq"||g.t==="miss")g.n=Math.max(g.lo,Math.min(8,g.n+(good?1:-1)));
   var ch=g.last;if(g.t==="wrd")ch=null;
   if(ch&&ch.isConnected){ch.classList.add(good?"right":"wrong");if(!good&&g.ans!=null)[].forEach.call($("mp").querySelectorAll("[data-a]"),function(x){if(x.dataset.a===g.ans)x.classList.add("right")})}
   good?chime():beep(300,.3,"triangle");$("mmsg").textContent=note;
@@ -499,11 +514,35 @@ function rSort(){
 $("mp").addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(b&&!b.disabled&&b.classList.contains("big"))lit(b,450);if(b&&mg&&mg.h){mg.last=b;mg.h(b)}});
 $("bMn").onclick=function(){mg=null;toHome()};
 function mdone(){
-  var g=mg,secs=Math.round((Date.now()-mt0)/1000);logPlay(g.t,g.ok/g.R,secs);win();
+  var g=mg,secs=Math.round((Date.now()-mt0)/1000);logPlay(g.t,g.ok/g.R,secs);award(g.ok,g.ok===g.R?g.t:null,secs);win();
   overlay('<h2>Well done!</h2><p>You got '+g.ok+' of '+g.R+' right.</p><div class="row"><button class="btn main" id="ma">Play again</button><button class="btn" id="mm">Menu</button></div>');
   $("ma").onclick=function(){startMG(g.t)};$("mm").onclick=function(){mg=null;toHome()};
 }
 addEventListener("resize",function(){var g=$("grid");if($("game").classList.contains("hidden")||!g.children.length)return;var c=COLS[LEVELS[cur].p],rows=Math.ceil(g.children.length/c);g.style.setProperty("--mw",Math.min(1050,c*Math.min(190,(innerHeight-230)/rows))+"px")});
+
+function award(c,key,secs){var p=me();p.ok=(p.ok||0)+c;if(key){p.bt=p.bt||{};if(!p.bt[key]||secs<p.bt[key])p.bt[key]=Math.max(1,secs)}persist()}
+function lbView(key){
+ key=key||"all";var rows=Object.keys(save.pr).map(function(id){var p=save.pr[id],bt=p.bt||{},m=Object.keys(bt).reduce(function(a,k){return a===null||bt[k]<a?bt[k]:a},null);return{n:p.name,me:id===save.cp,ok:p.ok||0,g:(p.log||[]).length,t:key==="all"?m:bt[key]}});
+ rows.sort(key==="all"?function(a,b){return b.ok-a.ok||b.g-a.g}:function(a,b){return(a.t||1e9)-(b.t||1e9)});
+ var md=["🥇","🥈","🥉"],opts=[["all","Overall – correct answers"]].concat(Object.keys(MG).map(function(k){return[k,MG[k].n]})).concat([1,2,3,4,5,6].map(function(n){return["p"+n,"Matching pairs – Level "+n]}));
+ overlay('<h2>Leaderboard</h2><label class="lab">Ranking<select id="lbs">'+opts.map(function(o){return'<option value="'+o[0]+'"'+(o[0]===key?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></label><div class="list">'+rows.map(function(r,i){var has=key==="all"?r.ok:r.t;return'<div class="lbr'+(r.me?" me":"")+'"><span class="rk">'+((has&&md[i])||i+1)+'</span><b>'+esc(r.n)+'</b><span>'+(key==="all"?r.ok+" correct"+(r.t?"<br><small>Best time: "+fmt(r.t)+"</small>":""):(r.t?fmt(r.t):"—"))+'</span></div>'}).join("")+'</div><p class="tip">Best times count games with every answer correct.</p><div class="row"><button class="btn main" id="lbd">Done</button></div>');
+ $("lbs").onchange=function(){lbView(this.value)};$("lbd").onclick=closeOv;
+}
+$("bLb").onclick=function(){lbView()};
+var _re=renderExtra;renderExtra=function(){_re();renderCont()};
+function renderCont(){var c=$("cont"),lg=me().lg,ok=lg&&(lg.k!=="p"||lg.i<save.unlocked)&&(lg.k==="p"||MG[lg.k]);
+ if(!ok){c.classList.add("hidden");return}
+ var nm=lg.k==="p"?"Matching pairs · "+(LN[save.deck||"garden"]||LN.garden)[lg.i]:MG[lg.k].n;
+ c.innerHTML='<button class="lv" id="bCont"><span class="n" style="background:var(--back)">▶</span><b>Continue where you left off</b><small>'+nm+'</small></button>';c.classList.remove("hidden");
+ $("bCont").onclick=function(){try{ac&&ac.resume()}catch(x){}lg.k==="p"?start(lg.i):startMG(lg.k)}}
+save.col=save.col||{};
+[].forEach.call(document.querySelectorAll("#home h2.sec"),function(h,i){
+ var body=[],n=h.nextElementSibling;while(n&&n.tagName!=="H2"&&!n.classList.contains("tip")){body.push(n);n=n.nextElementSibling}
+ h.tabIndex=0;h.setAttribute("role","button");
+ function set(c){h.setAttribute("aria-expanded",!c);body.forEach(function(b){b.classList.toggle("hidden",c)})}
+ function tg(){save.col[i]=!save.col[i];set(save.col[i]);persist()}
+ h.onclick=tg;h.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();tg()}};set(!!save.col[i])});
+renderCont();
 $("bPl").onclick=openPl;$("bSet").onclick=openSet;$("bFam").onclick=famView;
 load();applyPrefs();renderHome();
 </script>
