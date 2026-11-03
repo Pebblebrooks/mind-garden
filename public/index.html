@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1F6F78"><meta name="description" content="Gentle brain games for memory, numbers, logic and shapes."><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icon.svg"><title>Mind Garden – Brain Games</title>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Noto+Sans+SC:wght@400;700&amp;display=swap" rel="stylesheet">
 <style>
-:root{--bg:#E6F0F3;--bg2:#D3E6EA;--ink:#12303F;--soft:#3A5A6E;--panel:#FFFFFF;--back:#1F6F78;--back2:#2A8791;--sun:#F2B632;--sunink:#3A2A00;--leaf:#2F8F6B;--bad:#B5483A;--line:#B9D0D8;--fs:1}
+:root{--bg:#F6F1E7;--bg2:#EFE7D6;--ink:#17323A;--soft:#4A5B5E;--panel:#FFFDF8;--back:#1F6F78;--back2:#2A8791;--sun:#F2B632;--sunink:#3A2A00;--leaf:#2F8F6B;--bad:#B5483A;--line:#D9CDB4;--fs:1}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F2229;--bg2:#163039;--ink:#EAF4F6;--soft:#9DBBC6;--panel:#22444F;--back:#2A8791;--back2:#38A0AA;--line:#2D5360;--sunink:#2A1E00}}
 :root[data-theme="dark"]{--bg:#0F2229;--bg2:#163039;--ink:#EAF4F6;--soft:#9DBBC6;--panel:#22444F;--back:#2A8791;--back2:#38A0AA;--line:#2D5360;--sunink:#2A1E00}
 *{box-sizing:border-box}
@@ -143,6 +143,8 @@ h2.sec{cursor:pointer}h2.sec::before{content:"▾";margin-right:.4em;color:var(-
 select{font:inherit;width:100%;min-height:52px;border:2px solid var(--ink);border-radius:12px;background:var(--panel);color:var(--ink);padding:6px 10px;margin-top:6px}
 .lbr{display:grid;grid-template-columns:2.2em 1fr auto;gap:10px;align-items:center;padding:10px 14px;border:2px solid var(--line);border-radius:14px;text-align:left}
 .lbr.me{border-color:var(--leaf);background:color-mix(in srgb,var(--leaf) 12%,var(--panel))}.lbr span:last-child{text-align:right;font-weight:700}.lbr .rk{font-size:1.3em}
+.garden{padding:12px;width:fit-content;max-width:100%;margin-left:auto;margin-right:auto}
+html[data-th="sand"]{--bg:#F7EFE3;--bg2:#EFE0C8;--ink:#3B2A1A;--soft:#5E4A38;--panel:#FFFBF4;--line:#DCC9AA;--back:#B5532E;--back2:#C96A43;--sun:#E8B33A;--sunink:#3A2A00}
 </style>
 </head>
 <body>
@@ -209,7 +211,7 @@ function chime(){beep(660,.18);setTimeout(function(){beep(880,.28)},120)}
 function win(){[523,659,784,1047].forEach(function(f,i){setTimeout(function(){beep(f,.35)},i*150)})}
 
 function fmt(s){s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+":"+("0"+s%60).slice(-2)}
-function applyPrefs(){var h=document.documentElement;h.style.setProperty("--fs",save.hc?1.4:save.fs?1.25:1);h.setAttribute("data-hc",save.hc?"1":"0");h.setAttribute("data-cb",save.cb?"1":"0");document.body.classList.toggle("lh",!!save.lh)}
+function applyPrefs(){var h=document.documentElement;h.style.setProperty("--fs",save.hc?1.4:save.fs?1.25:1);h.setAttribute("data-hc",save.hc?"1":"0");h.setAttribute("data-cb",save.cb?"1":"0");document.body.classList.toggle("lh",!!save.lh);h.setAttribute("data-th",save.th||"cream");var mt=document.querySelector('meta[name=theme-color]');if(mt)mt.content=save.th==="sand"?"#B5532E":"#1F6F78"}
 
 function renderHome(){
   var h="";
@@ -333,7 +335,7 @@ function renderExtra(){
 /* ---------- settings & players ---------- */
 var SET=[["snd","Sound"],["speak","Spoken picture names"],["fs","Larger text"],["hc","Large high-contrast mode"],["cb","Colour-blind-safe colours"],["lh","Left-handed layout"]];
 function openSet(){
-  overlay('<h2>Settings</h2><div class="list">'+SET.map(function(s){return '<button class="btn tg" data-k="'+s[0]+'" aria-pressed="'+!!save[s[0]]+'">'+s[1]+': <b>'+(save[s[0]]?"On":"Off")+'</b></button>'}).join("")+'</div><div class="row"><button class="btn main" id="sd">Done</button></div>');
+  overlay('<h2>Settings</h2><div class="list">'+SET.map(function(s){return '<button class="btn tg" data-k="'+s[0]+'" aria-pressed="'+!!save[s[0]]+'">'+s[1]+': <b>'+(save[s[0]]?"On":"Off")+'</b></button>'}).join("")+'</div><b>Colour theme</b><div class="list">'+[["cream","Cream and teal"],["sand","Warm sand"]].map(function(t){return '<button class="btn tg" data-th="'+t[0]+'" aria-pressed="'+((save.th||"cream")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div><div class="row"><button class="btn main" id="sd">Done</button></div>');
   $("sd").onclick=closeOv;
 }
 function openPl(){
@@ -343,7 +345,8 @@ function openPl(){
   $("pa").onclick=function(){var n=$("pn").value.trim();if(!n){$("pn").focus();return}persist();var id="p"+Date.now();save.pr[id]=newP(n);save.cp=id;load();persist();renderHome();openPl()};
 }
 $("box").addEventListener("click",function(e){
-  var b=e.target.closest("[data-k],[data-d],[data-p],[data-x]");if(!b)return;var d=b.dataset;
+  var b=e.target.closest("[data-k],[data-d],[data-p],[data-x],[data-th]");if(!b)return;var d=b.dataset;
+  if(d.th){save.th=d.th;persist();applyPrefs();openSet();return}
   if(d.k){save[d.k]=save[d.k]?0:1;persist();applyPrefs();openSet();if(d.k==="snd")beep(600,.1);return}
   if(d.d){save.deck=d.d;persist();renderHome();openSet();return}
   if(d.p){persist();save.cp=d.p;load();persist();renderHome();openPl();return}
