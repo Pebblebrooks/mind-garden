@@ -108,6 +108,7 @@ h1{font-size:calc(2rem*var(--fs))}.top{align-items:flex-start}.tools{width:100%}
 .top{flex-direction:column;align-items:stretch}.tools{order:-1;width:100%;justify-content:center}.top h1{width:100%;text-align:center;margin:.5em 0 .1em}.sub{margin:0 auto 20px;text-align:center}.decks{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 6px}.decks b{margin-right:4px}
 body,button,input{font-family:"Atkinson Hyperlegible","Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC","WenQuanYi Micro Hei",Verdana,Tahoma,sans-serif}
 h2.sec,.tip{text-align:center}.garden{justify-content:center;text-align:center}.decks{justify-content:center}.tip{max-width:34em;margin:22px auto 0}
+.tools .btn,.decks .btn{min-height:36px;padding:2px 12px;font-size:.8em;font-weight:400;border-width:2px;border-radius:12px}.tools{gap:8px}.decks{gap:8px}.decks b{font-size:.9em}
 </style>
 </head>
 <body>
@@ -119,7 +120,7 @@ h2.sec,.tip{text-align:center}.garden{justify-content:center;text-align:center}.
       <button class="btn sm" id="bSet">Settings</button><button class="btn sm" id="bLang" aria-label="Language / 语言"></button>
     </div></div>
   <p class="sub">Gentle games for memory, numbers, logic and shapes. Take your time – there are no wrong turns here. Play a little each day and watch your garden grow.</p>
-  <div class="garden" id="garden"></div><h2 class="sec">Memory games</h2><div class="levels" id="acts"></div><h2 class="sec">Numbers, logic and shapes</h2><div class="levels" id="acts2"></div><h2 class="sec">Words and looking</h2><div class="levels" id="acts3"></div><h2 class="sec" id="mph">Matching pairs</h2><div class="decks" id="decks"></div><div class="levels" id="levels"></div>
+  <div class="garden" id="garden"></div><h2 class="sec">Memory games</h2><div class="levels" id="acts"></div><h2 class="sec">Numbers, logic and shapes</h2><div class="levels" id="acts2"></div><h2 class="sec">Words</h2><div class="levels" id="acts3"></div><h2 class="sec" id="mph">Matching pairs</h2><div class="decks" id="decks"></div><div class="levels" id="levels"></div>
   <p class="tip">Playing a little each day keeps the mind active. Short, regular sessions work best.</p>
 </section>
 
@@ -417,6 +418,13 @@ function rWrd(){
   $("mmsg").textContent="Tap the letters in the right order to spell the word.";say(it.n);
   g.h=function(b){if(b.disabled)return;var c=sc[+b.dataset.a];if(c===L[pos]){pos++;b.disabled=true;b.style.opacity=.35;$("sl").textContent=slots();if(pos===L.length)res(bad<3,"Yes – “"+it.n+"”!")}else{bad++;$("mmsg").textContent="Not that letter – try another."}};
 }
+Object.assign(MG,{wm:{n:"Match the word",d:"Pick the word that names the picture.",ic:"📖",g:2}});
+function rWm(){
+  var it=pick(allItems(),4),a=it[0];
+  $("mmsg").textContent="Which word matches the picture?";say(a.n);
+  ask('<div class="big st one">'+a.e+'</div>',shuffle(it.slice()).map(function(x){return{v:x.n,h:x.n,l:x.n}}),a.n,"Yes – the "+a.n+"!","It was the "+a.n+". Well tried!",1);
+  $("mp").querySelector(".gridm").style.setProperty("--c",2);
+}
 var mg=null,mt0=0;
 function allItems(){var a=[],s={};for(var k in DECKS)DECKS[k].forEach(function(x){var i=P(x);if(!s[i.e]){s[i.e]=1;a.push(i)}});return a}
 function pick(a,n){return shuffle(a.slice()).slice(0,n)}
@@ -430,7 +438,7 @@ function nextR(){
   if(!mg)return;
   if(mg.r>=mg.R)return mdone();
   mg.r++;mg.h=null;$("hRound").textContent="Round "+mg.r+" of "+mg.R;$("mp").innerHTML="";
-  ({seq:rSeq,miss:rMiss,sort:rSort,num:rNum,sum:rSum,odd:rOdd,shp:rShp,tbl:rTbl,clk:rClk,diff:rDiff,wrd:rWrd})[mg.t]();
+  ({seq:rSeq,miss:rMiss,sort:rSort,num:rNum,sum:rSum,odd:rOdd,shp:rShp,tbl:rTbl,clk:rClk,diff:rDiff,wrd:rWrd,wm:rWm})[mg.t]();
 }
 function res(good,note){
   var g=mg;g.h=null;if(good)g.ok++;if(g.t==="seq"||g.t==="miss")g.n=Math.max(g.lo,Math.min(8,g.n+(good?1:-1)));
