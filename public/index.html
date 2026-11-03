@@ -109,6 +109,7 @@ h1{font-size:calc(2rem*var(--fs))}.top{align-items:flex-start}.tools{width:100%}
 body,button,input{font-family:"Atkinson Hyperlegible","Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC","WenQuanYi Micro Hei",Verdana,Tahoma,sans-serif}
 h2.sec,.tip{text-align:center}.garden{justify-content:center;text-align:center}.decks{justify-content:center}.tip{max-width:34em;margin:22px auto 0}
 .tools .btn,.decks .btn{min-height:36px;padding:2px 12px;font-size:.8em;font-weight:400;border-width:2px;border-radius:12px}.tools{gap:8px}.decks{gap:8px}.decks b{font-size:.9em}
+.big.on,button.big:active,.lv:not([disabled]):active,.btn:not(.main):active{background:var(--sun);color:var(--sunink)}button.big:active{transform:scale(.96)}
 </style>
 </head>
 <body>
@@ -475,7 +476,7 @@ function rSort(){
   $("mmsg").textContent="Which group does the "+x.n+" belong to?";say(x.n);
   mg.h=function(b){var ok=b.dataset.a===a;res(ok,ok?"Yes – well done!":"It goes with “"+a+"”. Well tried!")};
 }
-$("mp").addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(b&&mg&&mg.h)mg.h(b)});
+$("mp").addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(b&&!b.disabled&&b.classList.contains("big"))lit(b,450);if(b&&mg&&mg.h)mg.h(b)});
 $("bMn").onclick=function(){mg=null;toHome()};
 function mdone(){
   var g=mg,secs=Math.round((Date.now()-mt0)/1000);logPlay(g.t,g.ok/g.R,secs);win();
