@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1F6F78"><meta name="description" content="Gentle brain games for memory, numbers, logic and shapes."><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icon.svg"><title>Mind Garden – Brain Games</title>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Noto+Sans+SC:wght@400;700&amp;display=swap" rel="stylesheet">
 <style>
 :root{--bg:#E6F0F3;--bg2:#D3E6EA;--ink:#12303F;--soft:#46667A;--panel:#FFFFFF;--back:#1F6F78;--back2:#2A8791;--sun:#F2B632;--sunink:#3A2A00;--leaf:#2F8F6B;--bad:#B5483A;--line:#B9D0D8;--fs:1}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F2229;--bg2:#163039;--ink:#EAF4F6;--soft:#9DBBC6;--panel:#1B3841;--back:#2A8791;--back2:#38A0AA;--line:#2D5360;--sunink:#2A1E00}}
@@ -105,6 +105,8 @@ h1{font-size:calc(2rem*var(--fs))}.top{align-items:flex-start}.tools{width:100%}
 .box{padding:20px 18px;border-radius:22px}.box h2{font-size:1.7em}.stars{font-size:2.6rem}
 .ov{padding:12px}.prow{flex-wrap:wrap}.bars{gap:6px}.bc{width:40px}}
 @media (max-height:480px) and (orientation:landscape){.wrap{padding:8px 16px}h1{font-size:1.8rem;margin:0}.msg{min-height:1.4em;margin:0 0 4px}.big{max-height:none;aspect-ratio:2}.big.one{width:110px}.seqline{margin:4px 0 8px}.box{max-height:96dvh}}
+.top{flex-direction:column;align-items:stretch}.tools{order:-1;width:100%;justify-content:center}.top h1{width:100%;text-align:center;margin:.5em 0 .1em}.sub{margin:0 auto 20px;text-align:center}.decks{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 6px}.decks b{margin-right:4px}
+body,button,input{font-family:"Atkinson Hyperlegible","Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC","WenQuanYi Micro Hei",Verdana,Tahoma,sans-serif}
 </style>
 </head>
 <body>
@@ -116,7 +118,7 @@ h1{font-size:calc(2rem*var(--fs))}.top{align-items:flex-start}.tools{width:100%}
       <button class="btn sm" id="bSet">Settings</button><button class="btn sm" id="bLang" aria-label="Language / 语言"></button>
     </div></div>
   <p class="sub">Gentle games for memory, numbers, logic and shapes. Take your time – there are no wrong turns here. Play a little each day and watch your garden grow.</p>
-  <div class="garden" id="garden"></div><h2 class="sec">Memory games</h2><div class="levels" id="acts"></div><h2 class="sec">Numbers, logic and shapes</h2><div class="levels" id="acts2"></div><h2 class="sec">Words and looking</h2><div class="levels" id="acts3"></div><h2 class="sec" id="mph">Matching pairs</h2><div class="levels" id="levels"></div>
+  <div class="garden" id="garden"></div><h2 class="sec">Memory games</h2><div class="levels" id="acts"></div><h2 class="sec">Numbers, logic and shapes</h2><div class="levels" id="acts2"></div><h2 class="sec">Words and looking</h2><div class="levels" id="acts3"></div><h2 class="sec" id="mph">Matching pairs</h2><div class="decks" id="decks"></div><div class="levels" id="levels"></div>
   <p class="tip">Playing a little each day keeps the mind active. Short, regular sessions work best.</p>
 </section>
 
@@ -287,7 +289,7 @@ function logPlay(g,r,s){var p=me(),t=dstr();if(p.last!==t){p.streak=p.last===yst
 var MG={seq:{n:"Remember the order",d:"Watch the pictures light up, then repeat them.",ic:"🔔"},miss:{n:"What’s missing?",d:"One picture disappears. Which one was it?",ic:"🧺"},sort:{n:"Sort it",d:"Put each picture in the right group.",ic:"🗂️"}};
 function renderExtra(){
   var p=me(),s=curStreak(p),em=s<3?"🌱":s<7?"🌿":s<14?"🌷":"🌻";
-  $("bPl").textContent="Player: "+p.name;$("mph").textContent="Matching pairs – "+DN[save.deck||"garden"]+" pictures";
+  $("bPl").textContent="Player: "+p.name;$("decks").innerHTML="<b>Choose pictures:</b>"+Object.keys(DN).map(function(k){return '<button class="btn sm tg" data-d="'+k+'" aria-pressed="'+((save.deck||"garden")===k)+'">'+DN[k]+"</button>"}).join("");
   $("garden").innerHTML='<div class="gr" aria-hidden="true">'+(s?new Array(Math.min(s,14)+1).join(em):"🌰")+'</div><div><b>'+(s?s+"-day streak":"Play today to plant your first seed")+'</b><br><small>'+(s?(p.last===dstr()?"Today’s game is done ✓":"Play today to keep your garden growing"):"Each day you play, your garden grows.")+'</small></div>';
   ["acts","acts2","acts3"].forEach(function(id,gi){$(id).innerHTML=Object.keys(MG).filter(function(k){return(MG[k].g||0)===gi}).map(function(k){var m=MG[k];return '<button class="lv" data-g="'+k+'"><span class="n" style="background:var(--back)">'+m.ic+'</span><b>'+m.n+'</b><small>'+m.d+'</small></button>'}).join("")});
 }
@@ -295,7 +297,7 @@ function renderExtra(){
 /* ---------- settings & players ---------- */
 var SET=[["snd","Sound"],["speak","Spoken picture names"],["fs","Larger text"],["hc","Large high-contrast mode"],["cb","Colour-blind-safe colours"],["lh","Left-handed layout"]];
 function openSet(){
-  overlay('<h2>Settings</h2><div class="list">'+SET.map(function(s){return '<button class="btn tg" data-k="'+s[0]+'" aria-pressed="'+!!save[s[0]]+'">'+s[1]+': <b>'+(save[s[0]]?"On":"Off")+'</b></button>'}).join("")+'</div><b>Picture set for Matching pairs</b><div class="list">'+Object.keys(DN).map(function(k){return '<button class="btn tg" data-d="'+k+'" aria-pressed="'+((save.deck||"garden")===k)+'">'+DN[k]+'</button>'}).join("")+'</div><div class="row"><button class="btn main" id="sd">Done</button></div>');
+  overlay('<h2>Settings</h2><div class="list">'+SET.map(function(s){return '<button class="btn tg" data-k="'+s[0]+'" aria-pressed="'+!!save[s[0]]+'">'+s[1]+': <b>'+(save[s[0]]?"On":"Off")+'</b></button>'}).join("")+'</div><div class="row"><button class="btn main" id="sd">Done</button></div>');
   $("sd").onclick=closeOv;
 }
 function openPl(){
@@ -311,6 +313,7 @@ $("box").addEventListener("click",function(e){
   if(d.p){persist();save.cp=d.p;load();persist();renderHome();openPl();return}
   if(d.x){if(!b.dataset.sure){b.dataset.sure=1;b.textContent="Tap again to remove";return}delete save.pr[d.x];if(d.x===save.cp){save.cp=Object.keys(save.pr)[0];load()}persist();renderHome();openPl()}
 });
+$("decks").addEventListener("click",function(e){var b=e.target.closest("[data-d]");if(b){save.deck=b.dataset.d;persist();renderHome()}});
 /* ---------- family view ---------- */
 function famView(){
   var p=me(),nm=esc(p.name);
