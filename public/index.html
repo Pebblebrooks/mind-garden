@@ -145,6 +145,12 @@ select{font:inherit;width:100%;min-height:52px;border:2px solid var(--ink);borde
 .lbr.me{border-color:var(--leaf);background:color-mix(in srgb,var(--leaf) 12%,var(--panel))}.lbr span:last-child{text-align:right;font-weight:700}.lbr .rk{font-size:1.3em}
 .garden{padding:12px;width:fit-content;max-width:100%;margin-left:auto;margin-right:auto}
 html[data-th="sand"]{--bg:#F7EFE3;--bg2:#EFE0C8;--ink:#3B2A1A;--soft:#5E4A38;--panel:#FFFBF4;--line:#DCC9AA;--back:#B5532E;--back2:#C96A43;--sun:#E8B33A;--sunink:#3A2A00}
+
+/* Warm sand also works in dark mode */
+@media (prefers-color-scheme:dark){html[data-th="sand"]:root:not([data-theme="light"]){--bg:#241A12;--bg2:#2E2218;--ink:#F6EBDD;--soft:#CDB89C;--panel:#3A2B1E;--line:#5A4531;--back:#C96A43;--back2:#D9825A;--sunink:#2A1E00}}
+html[data-th="sand"][data-theme="dark"]{--bg:#241A12;--bg2:#2E2218;--ink:#F6EBDD;--soft:#CDB89C;--panel:#3A2B1E;--line:#5A4531;--back:#C96A43;--back2:#D9825A;--sunink:#2A1E00}
+.prow{margin:10px 0 14px}.prow .tg{text-align:center;padding:8px 10px}
+#box .row:last-child{position:sticky;bottom:0;background:var(--panel);padding-top:10px}
 </style>
 </head>
 <body>
@@ -211,7 +217,7 @@ function chime(){beep(660,.18);setTimeout(function(){beep(880,.28)},120)}
 function win(){[523,659,784,1047].forEach(function(f,i){setTimeout(function(){beep(f,.35)},i*150)})}
 
 function fmt(s){s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+":"+("0"+s%60).slice(-2)}
-function applyPrefs(){var h=document.documentElement;h.style.setProperty("--fs",save.hc?1.4:save.fs?1.25:1);h.setAttribute("data-hc",save.hc?"1":"0");h.setAttribute("data-cb",save.cb?"1":"0");document.body.classList.toggle("lh",!!save.lh);h.setAttribute("data-th",save.th||"cream");var mt=document.querySelector('meta[name=theme-color]');if(mt)mt.content=save.th==="sand"?"#B5532E":"#1F6F78"}
+function applyPrefs(){var h=document.documentElement;h.style.setProperty("--fs",save.hc?1.4:save.fs?1.25:1);h.setAttribute("data-hc",save.hc?"1":"0");h.setAttribute("data-cb",save.cb?"1":"0");document.body.classList.toggle("lh",!!save.lh);h.setAttribute("data-th",save.th||"cream");var mt=document.querySelector('meta[name=theme-color]');if(mt)mt.content=save.th==="sand"?"#B5532E":"#1F6F78";if(save.mode==="light"||save.mode==="dark")h.setAttribute("data-theme",save.mode);else h.removeAttribute("data-theme")}
 
 function renderHome(){
   var h="";
@@ -335,7 +341,7 @@ function renderExtra(){
 /* ---------- settings & players ---------- */
 var SET=[["snd","Sound"],["speak","Spoken picture names"],["fs","Larger text"],["hc","Large high-contrast mode"],["cb","Colour-blind-safe colours"],["lh","Left-handed layout"]];
 function openSet(){
-  overlay('<h2>Settings</h2><div class="list">'+SET.map(function(s){return '<button class="btn tg" data-k="'+s[0]+'" aria-pressed="'+!!save[s[0]]+'">'+s[1]+': <b>'+(save[s[0]]?"On":"Off")+'</b></button>'}).join("")+'</div><b>Colour theme</b><div class="list">'+[["cream","Cream and teal"],["sand","Warm sand"]].map(function(t){return '<button class="btn tg" data-th="'+t[0]+'" aria-pressed="'+((save.th||"cream")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div><div class="row"><button class="btn main" id="sd">Done</button></div>');
+  overlay('<h2>Settings</h2><div class="list">'+SET.map(function(s){return '<button class="btn tg" data-k="'+s[0]+'" aria-pressed="'+!!save[s[0]]+'">'+s[1]+': <b>'+(save[s[0]]?"On":"Off")+'</b></button>'}).join("")+'</div><b>Appearance</b><div class="prow">'+[["auto","Match device"],["light","Light"],["dark","Dark"]].map(function(t){return '<button class="btn tg" data-m="'+t[0]+'" aria-pressed="'+((save.mode||"auto")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div><b>Colour theme</b><div class="prow">'+[["cream","Cream and teal"],["sand","Warm sand"]].map(function(t){return '<button class="btn tg" data-th="'+t[0]+'" aria-pressed="'+((save.th||"cream")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div><div class="row"><button class="btn main" id="sd">Done</button></div>');
   $("sd").onclick=closeOv;
 }
 function openPl(){
@@ -345,7 +351,8 @@ function openPl(){
   $("pa").onclick=function(){var n=$("pn").value.trim();if(!n){$("pn").focus();return}persist();var id="p"+Date.now();save.pr[id]=newP(n);save.cp=id;load();persist();renderHome();openPl()};
 }
 $("box").addEventListener("click",function(e){
-  var b=e.target.closest("[data-k],[data-d],[data-p],[data-x],[data-th]");if(!b)return;var d=b.dataset;
+  var b=e.target.closest("[data-k],[data-d],[data-p],[data-x],[data-th],[data-m]");if(!b)return;var d=b.dataset;
+  if(d.m){save.mode=d.m;persist();applyPrefs();openSet();return}
   if(d.th){save.th=d.th;persist();applyPrefs();openSet();return}
   if(d.k){save[d.k]=save[d.k]?0:1;persist();applyPrefs();openSet();if(d.k==="snd")beep(600,.1);return}
   if(d.d){save.deck=d.d;persist();renderHome();openSet();return}
