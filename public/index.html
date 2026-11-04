@@ -151,6 +151,14 @@ html[data-th="sand"]{--bg:#F7EFE3;--bg2:#EFE0C8;--ink:#3B2A1A;--soft:#5E4A38;--p
 html[data-th="sand"][data-theme="dark"]{--bg:#241A12;--bg2:#2E2218;--ink:#F6EBDD;--soft:#CDB89C;--panel:#3A2B1E;--line:#5A4531;--back:#C96A43;--back2:#D9825A;--sunink:#2A1E00}
 .prow{margin:10px 0 14px}.prow .tg{text-align:center;padding:8px 10px}
 #box .row:last-child{position:sticky;bottom:0;background:var(--panel);padding-top:10px}
+
+#cont{display:inline-flex;gap:4px}
+.tro{width:30px;height:30px;display:block;margin:0 auto}.box h3{margin:1em 0 .1em;font-size:1.2em}
+.fam{border-top:2px solid var(--line);padding-top:6px;margin-top:10px}.bars.s{height:100px}.bars.s .bc{width:38px}
+.thumbs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:8px 0 12px}.th{position:relative}.th img{width:56px;height:56px;object-fit:cover;border-radius:10px;border:2px solid var(--line);display:block}
+.th .btn{position:absolute;top:-8px;right:-8px;min-height:26px;min-width:26px;padding:0;font-size:.7em;border-radius:50%}
+.f.a img{width:88%;height:88%;object-fit:cover;border-radius:14px}
+.dpp{display:flex;flex-direction:column;gap:6px;border:3px solid var(--line);border-radius:20px;padding:8px}.dpp.t{border-style:dashed;border-color:var(--back)}.dpp .lbl{text-align:center;font-weight:700;font-size:.9em}
 </style>
 </head>
 <body>
@@ -158,11 +166,11 @@ html[data-th="sand"][data-theme="dark"]{--bg:#241A12;--bg2:#2E2218;--ink:#F6EBDD
 <section id="home">
   <div class="top"><h1>Mind Garden</h1>
     <div class="tools">
-      <button class="btn sm" id="bPl"></button><button class="btn sm" id="bFam">Family view</button><button class="btn sm" id="bLb">Leaderboard</button>
+      <button class="btn sm" id="bPl"></button><span id="cont" class="hidden"><button class="btn sm" id="bCont" aria-label="Continue last game"><span aria-hidden="true">▶</span> Continue</button><button class="btn sm ic" id="bContX" aria-label="Forget last game">✕</button></span><button class="btn sm" id="bFam">Family view</button><button class="btn sm" id="bLb">Leaderboard</button>
       <button class="btn sm" id="bSet">Settings</button><button class="btn sm" id="bLang" aria-label="Language / 语言"></button>
     </div></div>
   <p class="sub">Gentle games for memory, numbers, logic and shapes. Take your time – there are no wrong turns here. Play a little each day and watch your garden grow.</p>
-  <div id="cont" class="hidden"></div><div class="garden" id="garden"></div><h2 class="sec">Memory games</h2><div class="levels" id="acts"></div><h2 class="sec">Numbers, logic and shapes</h2><div class="levels" id="acts2"></div><h2 class="sec">Words</h2><div class="levels" id="acts3"></div><h2 class="sec" id="mph">Matching pairs</h2><div class="decks" id="decks"></div><div class="levels" id="levels"></div>
+  <div class="garden" id="garden"></div><h2 class="sec">Memory games</h2><div class="levels" id="acts"></div><h2 class="sec">Numbers, logic and shapes</h2><div class="levels" id="acts2"></div><h2 class="sec">Words</h2><div class="levels" id="acts3"></div><h2 class="sec" id="mph">Matching pairs</h2><div class="decks" id="decks"></div><div class="levels" id="levels"></div>
   <p class="tip">Playing a little each day keeps the mind active. Short, regular sessions work best.</p>
 </section>
 
@@ -193,9 +201,9 @@ var LEVELS=[
  {p:12,t:210,peek:5,name:"Master gardener"}
 ];
 var DECKS={garden:["🌻|sunflower","🍎|apple","🐦|bird","🚲|bicycle","☕|coffee cup","🎵|music note","🏡|house","🐶|dog","🦋|butterfly","🍰|cake","🌈|rainbow","⛵|sailboat"],music:["🎹|piano","🎻|violin","🎺|trumpet","🥁|drum","🎸|guitar","🎷|saxophone","🎤|microphone","🔔|bell","🎧|headphones","📻|radio","🎼|sheet music","🎶|melody"],home:["☎️|telephone","🕰️|clock","🧵|thread","🔑|key","🧺|basket","🛋️|sofa","📷|camera","🕯️|candle","🧭|compass","📺|television","🧶|wool","🍳|frying pan"],nature:["🌷|tulip","🍁|maple leaf","🌲|pine tree","🐝|bee","🌙|moon","☀️|sun","⭐|star","🍄|mushroom","🐢|turtle","🐟|fish","🌊|wave","🦉|owl"]};
-var DN={garden:"Garden",music:"Music",home:"Around the home",nature:"Nature"};
+var DN={garden:"Garden",music:"Music",home:"Around the home",nature:"Nature",photos:"My photos"};
 function P(s){var a=s.split("|");return{e:a[0],n:a[1]}}
-function icons(){return DECKS[save.deck||"garden"].map(P)}
+function icons(){if(save.deck==="photos"&&(save.photos||[]).length>=6){var ph=shuffle((save.photos||[]).map(function(p,i){return{k:"ph"+i,e:"📷",h:'<img src="'+p.d+'" alt="">',n:"photo"}}));return ph.concat(DECKS.garden.map(P))}return DECKS[save.deck&&save.deck!=="photos"?save.deck:"garden"].map(P)}
 var LN={garden:["First blooms","Garden path","Sunny border","Greenhouse","Orchard","Master gardener"],music:["Warm-up","First verse","Chorus","Duet","Orchestra","Maestro"],home:["Front door","Hallway","Living room","Kitchen","Attic treasures","Memory lane"],nature:["First steps","Woodland path","Meadow","Riverbank","Mountain trail","Nature expert"]};
 var PRAISE=["Lovely match!","Well spotted!","Sharp eyes!","That’s a pair!","Nicely done!"];
 var COLS={3:3,4:4,6:4,8:4,10:5,12:6};
@@ -243,7 +251,7 @@ function start(i){
   var g=$("grid");g.style.setProperty("--c",COLS[L.p]);
   var rows=Math.ceil(deck.length/COLS[L.p]);
   g.style.setProperty("--mw",Math.min(1050,COLS[L.p]*Math.min(190,(window.innerHeight-230)/rows))+"px");
-  g.innerHTML=deck.map(function(e,k){return '<button class="card up" data-k="'+k+'" data-e="'+e.e+'" data-n="'+e.n+'" aria-label="Card"><div class="in"><div class="f b"></div><div class="f a" aria-hidden="true">'+e.e+'</div></div></button>'}).join("");
+  g.innerHTML=deck.map(function(e,k){return '<button class="card up" data-k="'+k+'" data-e="'+(e.k||e.e)+'" data-n="'+e.n+'" aria-label="Card"><div class="in"><div class="f b"></div><div class="f a" aria-hidden="true">'+(e.h||e.e)+'</div></div></button>'}).join("");
   $("hLv").textContent="Level "+(i+1);
   $("hPairs").textContent="0 / "+L.p+" pairs";
   $("hTime").textContent=fmt(left);
@@ -334,7 +342,7 @@ function logPlay(g,r,s){var p=me(),t=dstr();if(p.last!==t){p.streak=p.last===yst
 var MG={seq:{n:"Remember the order",d:"Watch the pictures light up, then repeat them.",ic:"🔔"},miss:{n:"What’s missing?",d:"One picture disappears. Which one was it?",ic:"🧺"},sort:{n:"Sort it",d:"Put each picture in the right group.",ic:"🗂️"}};
 function renderExtra(){
   var p=me(),s=curStreak(p),em=s<3?"🌱":s<7?"🌿":s<14?"🌷":"🌻";
-  $("bPl").textContent="Player: "+p.name;$("decks").innerHTML="<b>Choose pictures:</b>"+Object.keys(DN).map(function(k){return '<button class="btn sm tg" data-d="'+k+'" aria-pressed="'+((save.deck||"garden")===k)+'">'+DN[k]+"</button>"}).join("");
+  $("bPl").textContent="Player: "+p.name;$("decks").innerHTML="<b>Choose pictures:</b>"+Object.keys(DN).filter(function(k){return k!=="photos"||(save.photos||[]).length>=6}).map(function(k){return '<button class="btn sm tg" data-d="'+k+'" aria-pressed="'+((save.deck||"garden")===k)+'">'+DN[k]+"</button>"}).join("");
   $("garden").innerHTML='<div class="gr" aria-hidden="true">'+(s?new Array(Math.min(s,14)+1).join(em):"🌰")+'</div><div><b>'+(s?s+"-day streak":"Play today to plant your first seed")+'</b><br><small>'+(s?(p.last===dstr()?"Today’s game is done ✓":"Play today to keep your garden growing"):"Each day you play, your garden grows.")+'</small></div>';
   ["acts","acts2","acts3"].forEach(function(id,gi){$(id).innerHTML=Object.keys(MG).filter(function(k){return(MG[k].g||0)===gi}).map(function(k){var m=MG[k];return '<button class="lv" data-g="'+k+'"><span class="n" style="background:var(--back)">'+m.ic+'</span><b>'+m.n+'</b><small>'+m.d+'</small></button>'}).join("")});
 }
@@ -342,8 +350,8 @@ function renderExtra(){
 /* ---------- settings & players ---------- */
 var SET=[["snd","Sound"],["speak","Spoken picture names"],["fs","Larger text"],["hc","Large high-contrast mode"],["cb","Colour-blind-safe colours"],["lh","Left-handed layout"]];
 function openSet(){
-  overlay('<h2>Settings</h2><div class="list">'+SET.map(function(s){return '<button class="btn tg" data-k="'+s[0]+'" aria-pressed="'+!!save[s[0]]+'">'+s[1]+': <b>'+(save[s[0]]?"On":"Off")+'</b></button>'}).join("")+'</div><b>Appearance</b><div class="prow">'+[["auto","Match device"],["light","Light"],["dark","Dark"]].map(function(t){return '<button class="btn tg" data-m="'+t[0]+'" aria-pressed="'+((save.mode||"auto")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div><b>Colour theme</b><div class="prow">'+[["cream","Cream and teal"],["sand","Warm sand"]].map(function(t){return '<button class="btn tg" data-th="'+t[0]+'" aria-pressed="'+((save.th||"cream")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div><div class="row"><button class="btn main" id="sd">Done</button></div>');
-  $("sd").onclick=closeOv;
+  overlay('<h2>Settings</h2><div class="list">'+SET.map(function(s){return '<button class="btn tg" data-k="'+s[0]+'" aria-pressed="'+!!save[s[0]]+'">'+s[1]+': <b>'+(save[s[0]]?"On":"Off")+'</b></button>'}).join("")+'</div><b>Appearance</b><div class="prow">'+[["auto","Match device"],["light","Light"],["dark","Dark"]].map(function(t){return '<button class="btn tg" data-m="'+t[0]+'" aria-pressed="'+((save.mode||"auto")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div><b>Colour theme</b><div class="prow">'+[["cream","Cream and teal"],["sand","Warm sand"]].map(function(t){return '<button class="btn tg" data-th="'+t[0]+'" aria-pressed="'+((save.th||"cream")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div>'+photosHtml()+'<div class="row"><button class="btn main" id="sd">Done</button></div>');
+  $("sd").onclick=closeOv;$("pha").onclick=function(){$("phf").click()};$("phf").onchange=function(){addPhotos(this.files)};
 }
 function openPl(){
   var ks=Object.keys(save.pr);
@@ -352,7 +360,9 @@ function openPl(){
   $("pa").onclick=function(){var n=$("pn").value.trim();if(!n){$("pn").focus();return}persist();var id="p"+Date.now();save.pr[id]=newP(n);save.cp=id;load();persist();renderHome();openPl()};
 }
 $("box").addEventListener("click",function(e){
-  var b=e.target.closest("button[data-k],button[data-d],button[data-p],button[data-x],button[data-th],button[data-m]");if(!b)return;var d=b.dataset;
+  var b=e.target.closest("button[data-k],button[data-d],button[data-p],button[data-x],button[data-th],button[data-m],button[data-ph],button[data-fc]");if(!b)return;var d=b.dataset;
+  if(d.ph){save.photos.splice(+d.ph,1);if(save.photos.length<6&&save.deck==="photos")save.deck="garden";persist();renderHome();openSet();return}
+  if(d.fc){if(!b.dataset.sure){b.dataset.sure=1;b.textContent="Tap again to clear";return}var q=save.pr[d.fc];q.log=[];q.streak=0;q.last="";q.gp=0;q.bt={};persist();renderHome();famView();return}
   if(d.m){save.mode=d.m;persist();applyPrefs();openSet();return}
   if(d.th){save.th=d.th;persist();applyPrefs();openSet();return}
   if(d.k){save[d.k]=save[d.k]?0:1;persist();applyPrefs();openSet();if(d.k==="snd")beep(600,.1);return}
@@ -363,18 +373,17 @@ $("box").addEventListener("click",function(e){
 $("decks").addEventListener("click",function(e){var b=e.target.closest("[data-d]");if(b){save.deck=b.dataset.d;persist();renderHome()}});
 /* ---------- family view ---------- */
 function famView(){
-  var p=me(),nm=esc(p.name);
-  if(!p.share){overlay('<h2>Family view</h2><p>This summarises '+nm+'’s play time and progress. It stays on this tablet and is never sent anywhere. Continue only if '+nm+' agrees.</p><div class="row"><button class="btn main" id="fy">Yes, show it</button><button class="btn" id="fn">Not now</button></div>');$("fy").onclick=function(){p.share=1;persist();famView()};$("fn").onclick=closeOv;return}
-  var m=[0,0,0,0,0,0,0],a=[],b=[],g=0,tm=0,dn=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  p.log.forEach(function(x){var n=age(x.d);if(n<7){m[6-n]+=x.s;a.push(x.r);g++;tm+=x.s}else if(n<14)b.push(x.r)});
-  var av=function(z){return z.length?z.reduce(function(s,v){return s+v},0)/z.length:null},A=av(a),B=av(b);
-  var tr=A===null?"No games played this week yet.":B===null?"A good start – keep going.":A>B+.05?"Doing a little better than last week.":A<B-.05?"A little lower than last week. That is normal; a short game each day helps.":"Steady compared with last week.";
-  var mx=Math.max.apply(null,m.concat([60])),st=0;for(var k in p.stars)st+=p.stars[k];
-  var bars=m.map(function(s,i){var d=new Date();d.setDate(d.getDate()-(6-i));return '<div class="bc"><i style="height:'+Math.round(s/mx*100)+'px"></i><small>'+Math.round(s/60)+' min</small><span>'+dn[d.getDay()]+'</span></div>'}).join("");
-  overlay('<h2>'+nm+'’s week</h2><div class="bars">'+bars+'</div><p>'+g+' games, '+Math.round(tm/60)+' minutes this week<br>Matching level reached: '+Math.min(p.unlocked,6)+' of 6, with '+st+' stars<br>'+tr+'</p><div class="row"><button class="btn main" id="fd">Done</button><button class="btn sm" id="fs2">Stop sharing</button><button class="btn sm" id="fc">Clear history</button></div>');
-  $("fd").onclick=closeOv;
-  $("fs2").onclick=function(){p.share=0;persist();closeOv()};
-  $("fc").onclick=function(){if(!this.dataset.sure){this.dataset.sure=1;this.textContent="Tap again to clear";return}p.log=[];p.streak=0;p.last="";persist();renderHome();closeOv()};
+  if(!save.famOk){overlay('<h2>Family view</h2><p>This summarises each player’s play time and progress. It stays on this device and is never sent anywhere. Continue only if every player agrees.</p><div class="row"><button class="btn main" id="fy">Yes, show it</button><button class="btn" id="fn">Not now</button></div>');$("fy").onclick=function(){save.famOk=1;persist();famView()};$("fn").onclick=closeOv;return}
+  var dn=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var blocks=Object.keys(save.pr).map(function(id){var p=save.pr[id],m=[0,0,0,0,0,0,0],a=[],b=[],g=0,tm=0;
+    p.log.forEach(function(x){var n=age(x.d);if(n<7){m[6-n]+=x.s;a.push(x.r);g++;tm+=x.s}else if(n<14)b.push(x.r)});
+    var av=function(z){return z.length?z.reduce(function(s,v){return s+v},0)/z.length:null},A=av(a),B=av(b);
+    var tr=A===null?"No games played this week yet.":B===null?"A good start – keep going.":A>B+.05?"Doing a little better than last week.":A<B-.05?"A little lower than last week. That is normal; a short game each day helps.":"Steady compared with last week.";
+    var mx=Math.max.apply(null,m.concat([60])),st=0;for(var k in p.stars)st+=p.stars[k];
+    var bars=m.map(function(s,i){var d=new Date();d.setDate(d.getDate()-(6-i));return '<div class="bc"><i style="height:'+Math.round(s/mx*70)+'px"></i><small>'+Math.round(s/60)+' min</small><span>'+dn[d.getDay()]+'</span></div>'}).join("");
+    return '<section class="fam"><h3>'+esc(p.name)+'’s week'+(id===save.cp?" ✓":"")+'</h3><div class="bars s">'+bars+'</div><p>'+g+' games, '+Math.round(tm/60)+' minutes this week<br>Matching level reached: '+Math.min(p.unlocked||1,6)+' of 6, with '+st+' stars<br>'+tr+'</p><button class="btn sm" data-fc="'+id+'">Clear history</button></section>'}).join("");
+  overlay('<h2>Family view</h2>'+blocks+'<div class="row"><button class="btn main" id="fd">Done</button><button class="btn sm" id="fs2">Stop sharing</button></div>');
+  $("fd").onclick=closeOv;$("fs2").onclick=function(){save.famOk=0;persist();closeOv()};
 }
 /* ---------- brain games ---------- */
 var CATS={"Fruit":["🍎|apple","🍌|banana","🍇|grapes","🍓|strawberry","🍊|orange"],"Animals":["🐶|dog","🐱|cat","🐦|bird","🐴|horse","🐢|turtle"],"Around the home":["🛋️|sofa","🔑|key","🕰️|clock","🍳|frying pan","🛏️|bed"],"Transport":["🚲|bicycle","🚌|bus","🚂|train","⛵|sailboat","✈️|aeroplane"]};
@@ -450,8 +459,8 @@ function rDiff(){
   var r=mg.r,n=r<3?6:r<5?9:12,cols=n===12?4:3,it=pick(allItems(),n+1),extra=it.pop(),k=rnd(0,n-1),tries=0,g=mg;
   var cell=function(x,i,btn){return btn?'<button class="big sm" data-a="'+i+'" aria-label="Picture '+(i+1)+'">'+x.e+'</button>':'<div class="big st sm">'+x.e+'</div>'};
   var right=it.map(function(x,i){return i===k?extra:x});
-  $("mp").innerHTML='<div class="dp"><div class="gridm" style="--c:'+cols+'">'+it.map(function(x,i){return cell(x,i)}).join("")+'</div><div class="gridm" style="--c:'+cols+'">'+right.map(function(x,i){return cell(x,i,1)}).join("")+'</div></div>';
-  $("mmsg").textContent="One picture on the right is different. Tap it.";mg.ans=String(k);
+  $("mp").innerHTML='<div class="dp"><div class="dpp"><div class="lbl">Original</div><div class="gridm" style="--c:'+cols+'">'+it.map(function(x,i){return cell(x,i)}).join("")+'</div></div><div class="dpp t"><div class="lbl">Find the change</div><div class="gridm" style="--c:'+cols+'">'+right.map(function(x,i){return cell(x,i,1)}).join("")+'</div></div></div>';
+  $("mmsg").textContent="One picture has changed. Tap it in the “Find the change” set.";mg.ans=String(k);
   var bs=$("mp").querySelectorAll("button");
   g.h=function(b){if(+b.dataset.a===k){lit(bs[k],1500);return res(true,"Yes – you spotted it!")}tries++;if(tries>1){lit(bs[k],2000);return res(false,"It was the one that flashed. Well tried!")}$("mmsg").textContent="Not that one – look again."};
 }
@@ -535,24 +544,29 @@ function mdone(){
 }
 addEventListener("resize",function(){var g=$("grid");if($("game").classList.contains("hidden")||!g.children.length)return;var c=COLS[LEVELS[cur].p],rows=Math.ceil(g.children.length/c);g.style.setProperty("--mw",Math.min(1050,c*Math.min(190,(innerHeight-230)/rows))+"px")});
 
-function award(c,key,secs){var p=me();p.ok=(p.ok||0)+c;if(key){p.bt=p.bt||{};if(!p.bt[key]||secs<p.bt[key])p.bt[key]=Math.max(1,secs)}persist()}
+function award(c,key,secs){var p=me();p.ok=(p.ok||0)+c;p.gp=(p.gp||0)+1;if(key){p.bt=p.bt||{};if(!p.bt[key]||secs<p.bt[key])p.bt[key]=Math.max(1,secs)}persist()}
+function trophy(i){var c=["#E0A800","#A9B4BE","#C27A3C"][i],t=["Gold trophy","Silver trophy","Bronze trophy"][i];return '<svg class="tro" viewBox="0 0 24 24" role="img" aria-label="'+t+'"><path d="M7 3h10v5a5 5 0 0 1-10 0z" fill="'+c+'"/><path d="M7 5H3.5v1.5A3.5 3.5 0 0 0 7 10M17 5h3.5v1.5A3.5 3.5 0 0 1 17 10" fill="none" stroke="'+c+'" stroke-width="1.8"/><rect x="10.7" y="12.5" width="2.6" height="4" fill="'+c+'"/><rect x="7.5" y="17" width="9" height="3.2" rx="1" fill="'+c+'"/></svg>'}
+function photosHtml(){var ph=save.photos||[];return '<b>My photos for Matching pairs</b><p class="tip">Photos stay on this device. Add at least 6, then choose “My photos” in Matching pairs.</p><div class="thumbs">'+ph.map(function(p,i){return '<span class="th"><img src="'+p.d+'" alt=""><button class="btn sm ic" data-ph="'+i+'" aria-label="Remove photo">✕</button></span>'}).join("")+'</div><input type="file" id="phf" accept="image/*" multiple class="hidden"><button class="btn sm" id="pha">Add photos</button>'}
+function shrink(f,cb){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var m=Math.min(im.width,im.height),c=document.createElement("canvas");c.width=c.height=192;c.getContext("2d").drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,192,192);cb(c.toDataURL("image/jpeg",.78))};im.onerror=function(){cb(null)};im.src=r.result};r.onerror=function(){cb(null)};r.readAsDataURL(f)}
+function addPhotos(fl){save.photos=save.photos||[];var q=[].slice.call(fl).slice(0,24-save.photos.length);(function nx(){var f=q.shift();if(!f){persist();renderHome();openSet();return}shrink(f,function(d){if(d&&save.photos.length<24)save.photos.push({d:d,n:"photo"});nx()})})()}
 function lbView(key){
  key=key||"all";var ids=Object.keys(save.pr),keys={},pts={};
  ids.forEach(function(id){var b=save.pr[id].bt||{};for(var k in b)keys[k]=1});
  Object.keys(keys).forEach(function(k){ids.filter(function(id){return(save.pr[id].bt||{})[k]}).sort(function(a,b){return save.pr[a].bt[k]-save.pr[b].bt[k]}).forEach(function(id,i){pts[id]=(pts[id]||0)+ids.length-i})});
- var rows=ids.map(function(id){var p=save.pr[id],bt=p.bt||{},m=Object.keys(bt).reduce(function(a,k){return a===null||bt[k]<a?bt[k]:a},null);return{n:p.name,me:id===save.cp,pts:pts[id]||0,t:key==="all"?m:bt[key]}});
- rows.sort(key==="all"?function(a,b){return b.pts-a.pts||(a.t||1e9)-(b.t||1e9)}:function(a,b){return(a.t||1e9)-(b.t||1e9)});
- var md=["🥇","🥈","🥉"],opts=[["all","Overall – fastest all-correct times"]].concat(Object.keys(MG).map(function(k){return[k,MG[k].n]})).concat([1,2,3,4,5,6].map(function(n){return["p"+n,"Matching pairs – Level "+n]}));
- overlay('<h2>Leaderboard</h2><label class="lab">Ranking<select id="lbs">'+opts.map(function(o){return'<option value="'+o[0]+'"'+(o[0]===key?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></label><div class="list">'+rows.map(function(r,i){var has=key==="all"?r.pts:r.t;return'<div class="lbr'+(r.me?" me":"")+'"><span class="rk">'+((has&&md[i])||i+1)+'</span><b>'+esc(r.n)+'</b><span>'+(key==="all"?r.pts+" pts"+(r.t?"<br><small>Best time: "+fmt(r.t)+"</small>":""):(r.t?fmt(r.t):"—"))+'</span></div>'}).join("")+'</div><p class="tip">Ranked by fastest games with every answer correct. Overall adds points for each game.</p><div class="row"><button class="btn main" id="lbd">Done</button></div>');
+ var all=ids.map(function(id){var p=save.pr[id],bt=p.bt||{},m=Object.keys(bt).reduce(function(a,k){return a===null||bt[k]<a?bt[k]:a},null);return{n:p.name,me:id===save.cp,gp:Math.max(p.gp||0,(p.log||[]).length),pts:pts[id]||0,m:m,t:key==="all"?m:bt[key]}});
+ var byG=all.slice().sort(function(a,b){return b.gp-a.gp||(a.m||1e9)-(b.m||1e9)});
+ var byT=all.slice().sort(key==="all"?function(a,b){return b.pts-a.pts||(a.m||1e9)-(b.m||1e9)}:function(a,b){return(a.t||1e9)-(b.t||1e9)});
+ function row(r,i,v,has){return'<div class="lbr'+(r.me?" me":"")+'"><span class="rk">'+(has&&i<3?trophy(i):i+1)+'</span><b>'+esc(r.n)+'</b><span>'+v+'</span></div>'}
+ function list(rows,val,has){var h=rows.slice(0,10).map(function(r,i){return row(r,i,val(r),has(r))}).join(""),mi=rows.findIndex(function(r){return r.me});if(mi>=10)h+=row(rows[mi],mi,val(rows[mi]),false);return h}
+ var opts=[["all","Overall – fastest all-correct times"]].concat(Object.keys(MG).map(function(k){return[k,MG[k].n]})).concat([1,2,3,4,5,6].map(function(n){return["p"+n,"Matching pairs – Level "+n]}));
+ overlay('<h2>Leaderboard</h2><h3>Most games played</h3><p class="tip">Ranked by the number of games finished.</p><div class="list">'+list(byG,function(r){return r.gp+" games"},function(r){return r.gp>0})+'</div><h3>Best timings</h3><p class="tip">Ranked by fastest games with every answer correct. “Overall” adds points from each game.</p><label class="lab">Ranking<select id="lbs">'+opts.map(function(o){return'<option value="'+o[0]+'"'+(o[0]===key?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></label><div class="list">'+list(byT,function(r){return key==="all"?r.pts+" pts"+(r.m?"<br><small>Best time: "+fmt(r.m)+"</small>":""):(r.t?fmt(r.t):"—")},function(r){return key==="all"?r.pts>0:!!r.t})+'</div><div class="row"><button class="btn main" id="lbd">Done</button></div>');
  $("lbs").onchange=function(){lbView(this.value)};$("lbd").onclick=closeOv;
 }
 $("bLb").onclick=function(){lbView()};
 var _re=renderExtra;renderExtra=function(){_re();renderCont()};
-function renderCont(){var c=$("cont"),lg=me().lg,ok=lg&&(lg.k!=="p"||lg.i<save.unlocked)&&(lg.k==="p"||MG[lg.k]);
- if(!ok){c.classList.add("hidden");return}
- var nm=lg.k==="p"?"Matching pairs · "+(LN[save.deck||"garden"]||LN.garden)[lg.i]:MG[lg.k].n;
- c.innerHTML='<button class="lv" id="bCont"><span class="n" style="background:var(--back)">▶</span><b>Continue where you left off</b><small>'+nm+'</small></button>';c.classList.remove("hidden");
- $("bCont").onclick=function(){try{ac&&ac.resume()}catch(x){}lg.k==="p"?start(lg.i):startMG(lg.k)}}
+function renderCont(){var lg=me().lg,ok=lg&&(lg.k!=="p"||lg.i<save.unlocked)&&(lg.k==="p"||MG[lg.k]);$("cont").classList.toggle("hidden",!ok)}
+$("bCont").onclick=function(){var lg=me().lg;if(!lg)return;try{ac&&ac.resume()}catch(x){}lg.k==="p"?start(lg.i):startMG(lg.k)};
+$("bContX").onclick=function(){me().lg=null;persist();renderCont()};
 save.col=save.col||{};
 [].forEach.call(document.querySelectorAll("#home h2.sec"),function(h,i){
  var body=[],n=h.nextElementSibling;while(n&&n.tagName!=="H2"&&!n.classList.contains("tip")){body.push(n);n=n.nextElementSibling}
