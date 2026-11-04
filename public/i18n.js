@@ -1,6 +1,6 @@
 /* Mind Garden – English / 简体中文 layer. Unmatched strings safely fall back to English. */
 (function(){
-var ZH={"Mind Garden":"心灵花园","Family view":"家人视图","Settings":"设置","Memory games":"记忆游戏","Numbers, logic and shapes":"数字、逻辑与图形","Words and looking":"文字与观察","Menu":"菜单","Pause":"暂停","Done":"完成","On":"开","Off":"关","Stay":"留下","Leave":"离开","Remove":"移除","Card":"卡片","Time left":"剩余时间",
+var ZH={"Mind Garden":"心灵花园","Family view":"家人视图","Settings":"设置","Memory games":"记忆游戏","Numbers, logic and shapes":"数字、逻辑与图形","Words and looking":"文字与观察","Choose pictures":"选择图片","Words":"文字","Match the word":"配词语","Pick the word that names the picture.":"选出与图片相符的词语。","Which word matches the picture?":"哪个词语与图片相符？","Leaderboard":"排行榜","Ranking":"排名依据","Overall – correct answers":"总榜——答对数","Continue where you left off":"继续上次的游戏","Best times count games with every answer correct.":"最佳用时只统计全部答对的游戏。","Colour theme":"配色主题","Cream and teal":"奶油与青绿","Warm sand":"暖沙色","Appearance":"外观","Match device":"跟随设备","Light":"浅色","Dark":"深色","Overall – fastest all-correct times":"总榜——全对最快用时","Ranked by fastest games with every answer correct. Overall adds points for each game.":"按全部答对的最快用时排名。总榜按各游戏名次累计积分。","Analogue clock":"指针时钟","Continue":"继续","Continue last game":"继续上次的游戏","Forget last game":"放弃上次的游戏","My photos":"我的照片","My photos for Matching pairs":"配对游戏的我的照片","Add photos":"添加照片","Remove photo":"移除照片","Photos stay on this device. Add at least 6, then choose “My photos” in Matching pairs.":"照片只保存在这台设备上。至少添加 6 张，然后在配对游戏里选择“我的照片”。","Most games played":"对局最多","Best timings":"最佳用时","Ranked by the number of games finished.":"按完成的游戏局数排名。","Ranked by fastest games with every answer correct. “Overall” adds points from each game.":"按全部答对的最快用时排名。“总榜”按各游戏的名次累计积分。","Gold trophy":"金杯","Silver trophy":"银杯","Bronze trophy":"铜杯","Original":"原图","Find the change":"找出变化","One picture has changed. Tap it in the “Find the change” set.":"有一张图片变了。请在“找出变化”那一组里点它。","This summarises each player’s play time and progress. It stays on this device and is never sent anywhere. Continue only if every player agrees.":"这里汇总了每位玩家的游戏时间和进度。内容只保存在这台设备上，不会发送到任何地方。请在所有玩家同意后再继续。","Numerical patterns":"数字规律","Mental arithmetic":"心算","Who's playing?":"谁在玩？","Finish":"完成","Watch the images light up one by one, then click on them accordingly.":"看图片依次亮起，然后照样点出来。","Menu":"菜单","Pause":"暂停","Done":"完成","On":"开","Off":"关","Stay":"留下","Leave":"离开","Remove":"移除","Card":"卡片","Time left":"剩余时间",
 "Gentle games for memory, numbers, logic and shapes. Take your time – there are no wrong turns here. Play a little each day and watch your garden grow.":"轻松的记忆、数字、逻辑和图形游戏。慢慢来，这里没有走错的路。每天玩一点，看着你的花园慢慢长大。",
 "Playing a little each day keeps the mind active. Short, regular sessions work best.":"每天玩一点有助于保持头脑活跃。短时间、有规律的练习效果最好。",
 "Tap a card to begin.":"点一张卡片开始。","Not quite – have another look.":"不太对——再看看。","Remember where this pair is…":"记住这一对的位置……","Paused":"已暂停","Your time is stopped. Rest as long as you like.":"计时已停止。想休息多久都可以。","Keep playing":"继续玩","Back to menu":"返回菜单","Leave this game?":"离开这局游戏？","Your progress in this round will be lost.":"本局的进度将会丢失。","Level complete!":"过关了！","You finished the garden!":"你完成了整个花园！","Next level":"下一关","Play again":"再玩一次","Time’s up – well tried!":"时间到——已经很棒了！","Try again":"再试一次",
@@ -13,9 +13,22 @@ var ZH={"Mind Garden":"心灵花园","Family view":"家人视图","Settings":"�
 "Watch the order…":"看清顺序……","Your turn – tap them in the same order.":"轮到你了——按同样的顺序点。","Not quite. That’s fine – the next one will be a little different.":"不太对。没关系——下一题会稍有不同。","One has disappeared. Which one was it?":"有一个不见了。是哪一个？","Yes – well done!":"对了——做得好！","What number comes next?":"下一个数字是什么？","Work it out in your head.":"在脑子里算一算。","Which one doesn’t belong with the others?":"哪一个和其他的不是一类？","One picture on the right is different. Tap it.":"右边有一张图片不同。点一下它。","Yes – you spotted it!":"对了——你找到了！","It was the one that flashed. Well tried!":"是刚才闪烁的那一个。已经很棒了！","Not that one – look again.":"不是那个——再看看。","Tap the letters in the right order to spell the word.":"按正确的顺序点字母，拼出这个英文单词。","Not that letter – try another.":"不是这个字母——换一个试试。","Well done!":"做得好！",
 "Sun":"日","Mon":"一","Tue":"二","Wed":"三","Thu":"四","Fri":"五","Sat":"六","No games played this week yet.":"本周还没有玩过游戏。","A good start – keep going.":"开局不错——继续加油。","Doing a little better than last week.":"比上周好了一点。","A little lower than last week. That is normal; a short game each day helps.":"比上周略低。这很正常；每天玩一小局会有帮助。","Steady compared with last week.":"与上周持平。",
 "apple":"苹果","banana":"香蕉","grapes":"葡萄","strawberry":"草莓","orange":"橙子","dog":"狗","cat":"猫","bird":"鸟","horse":"马","turtle":"乌龟","sofa":"沙发","key":"钥匙","clock":"时钟","frying pan":"平底锅","bed":"床","bicycle":"自行车","bus":"公交车","train":"火车","sailboat":"帆船","aeroplane":"飞机","sunflower":"向日葵","coffee cup":"咖啡杯","music note":"音符","house":"房子","butterfly":"蝴蝶","cake":"蛋糕","rainbow":"彩虹","piano":"钢琴","violin":"小提琴","trumpet":"小号","drum":"鼓","guitar":"吉他","saxophone":"萨克斯","microphone":"麦克风","bell":"铃铛","headphones":"耳机","radio":"收音机","sheet music":"乐谱","melody":"旋律","telephone":"电话","thread":"线","basket":"篮子","camera":"相机","candle":"蜡烛","compass":"指南针","television":"电视","wool":"毛线","tulip":"郁金香","maple leaf":"枫叶","pine tree":"松树","bee":"蜜蜂","moon":"月亮","sun":"太阳","star":"星星","mushroom":"蘑菇","fish":"鱼","wave":"海浪","owl":"猫头鹰","circle":"圆形","square":"方形","triangle":"三角形","diamond":"菱形"};
-var N=function(x){return ZH[x]||x};
+function norm(s){return String(s).toLowerCase().replace(/[’‘`]/g,"'").replace(/\s+/g," ").trim()}
+var ZN={};for(var q in ZH)ZN[norm(q)]=ZH[q];
+var N=function(x){return ZH[x]||ZN[norm(x)]||x};
 var RX=[
 [/^([^:]+):$/,function(a){return N(a)+"："}],
+[/^(\d+) correct$/,function(n){return"答对 "+n+" 题"}],
+[/^Best time: (.+)$/,function(t){return"最快用时："+t}],
+[/^Matching pairs – Level (\d+)$/,function(n){return"配对游戏——第 "+n+" 关"}],
+[/^Matching pairs · (.+)$/,function(a){return"配对游戏 · "+N(a)}],
+[/^(\d+) pts$/,function(n){return n+" 分"}],
+[/^(\d+) stars?$/,function(n){return n+" 颗星"}],
+[/^Picture (\d+)$/,function(n){return"图片 "+n}],
+[/^Letter (.)$/,function(n){return"字母 "+n}],
+[/^(\d+) games$/,function(n){return n+" 局"}],
+[/^You answered (\d+) out of (\d+) questions correctly\.$/,function(a,b){return"你答对了 "+a+"/"+b+" 题。"}],
+[/^Player (\d+)$/,function(n){return"玩家 "+n}],
 [/^Level (\d+)$/,function(n){return"第 "+n+" 关"}],
 [/^(\d+) pairs · (.+?)( · locked)?$/,function(p,t,l){return p+" 对 · "+t+(l?" · 未解锁":"")}],
 [/^(\d+) \/ (\d+) pairs$/,function(a,b){return a+" / "+b+" 对"}],
@@ -26,7 +39,7 @@ var RX=[
 [/^(Lovely match!|Well spotted!|Sharp eyes!|That’s a pair!|Nicely done!)(?: (\d+) in a row!)?$/,function(p,n){return N(p)+(n?" 连续 "+n+" 对！":"")}],
 [/^You found all (\d+) pairs with (.+) to spare\.$/,function(a,b){return"你找到了全部 "+a+" 对，还剩 "+b+"。"}],
 [/^You found (\d+) of (\d+) pairs\. Try again with 15 extra seconds\.$/,function(a,b){return"你找到了 "+a+"/"+b+" 对。再试一次，将多给 15 秒。"}],
-[/^Player: (.*)$/,function(a){return"玩家："+a}],
+[/^Player: (.*)$/,function(a){return"玩家："+tr(a)}],
 [/^Matching pairs – (.+) pictures$/,function(a){return"配对游戏——"+N(a)+"图片"}],
 [/^Matching pairs$/,function(){return"配对游戏"}],
 [/^(\d+)-day streak$/,function(n){return"连续 "+n+" 天"}],
@@ -51,8 +64,8 @@ var RX=[
 [/^Matching level reached: (\d+) of 6, with (\d+) stars$/,function(a,b){return"配对游戏进度：第 "+a+" 关（共 6 关），获得 "+b+" 颗星"}],
 [/^(\d+) min$/,function(n){return n+" 分钟"}]
 ];
-function tr(s){var k=String(s).trim();if(!k)return s;var z=ZH[k];if(z)return s.replace(k,z);
- for(var i=0;i<RX.length;i++){var m=k.match(RX[i][0]);if(m)return s.replace(k,RX[i][1].apply(null,m.slice(1)))}return s}
+function tr(s){var k=String(s).trim();if(!k)return s;var z=ZH[k]||ZN[norm(k)];if(z)return s.replace(k,z);
+ var kk=k.replace(/'/g,"’");for(var i=0;i<RX.length;i++){var m=kk.match(RX[i][0]);if(m)return s.replace(k,RX[i][1].apply(null,m.slice(1)))}return s}
 window.tr=tr;
 if(!save.lang)save.lang=/^zh/i.test(navigator.language||"")?"zh":"en";
 var zh=save.lang==="zh",btn=document.getElementById("bLang");
