@@ -112,7 +112,7 @@ h2.sec,.tip{text-align:center}.garden{justify-content:center;text-align:center}.
 .big.on,button.big:active,.lv:not([disabled]):active,.btn:not(.main):active{background:var(--sun);color:var(--sunink)}button.big:active{transform:scale(.96)}
 
 /* section accents */
-#home h2.sec:nth-of-type(1),#acts{--ac:#2F8F6B}#home h2.sec:nth-of-type(2),#acts2{--ac:#3B6FB6}#home h2.sec:nth-of-type(3),#acts3{--ac:#A8641A}#home h2.sec:nth-of-type(4),#levels{--ac:#7D5BA6}
+#home h2.sec:nth-of-type(1),#acts{--ac:#2F8F6B}#home h2.sec:nth-of-type(2),#acts2{--ac:#3B6FB6}#home h2.sec:nth-of-type(3),#acts3{--ac:#8A5CB5}#home h2.sec:nth-of-type(4),#acts4{--ac:#C2573D}#home h2.sec:nth-of-type(5),#acts5{--ac:#1F7A8C}#home h2.sec:nth-of-type(6),#acts6{--ac:#A8641A}#home h2.sec:nth-of-type(7),#levels{--ac:#B0457A}
 h2.sec::after{content:"";display:block;width:56px;height:5px;border-radius:3px;margin:8px auto 0;background:var(--ac,var(--leaf))}
 .lv{border-width:2px;border-left:8px solid var(--ac,var(--line))}
 .levels .lv .n{background:var(--ac,var(--leaf))!important}.lv[disabled] .n{background:var(--soft)!important}
@@ -165,6 +165,9 @@ html[data-th="sand"][data-theme="dark"]{--bg:#241A12;--bg2:#2E2218;--ink:#F6EBDD
 body,button,input,select{font-family:"Punct","Atkinson Hyperlegible",Verdana,Tahoma,"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC","WenQuanYi Micro Hei",sans-serif}
 html[lang^=zh] body,html[lang^=zh] button{font-family:"Punct","Atkinson Hyperlegible","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif}
 .brk{background:color-mix(in srgb,var(--leaf) 14%,var(--panel));border:2px solid var(--leaf);border-radius:14px;padding:10px 14px;font-weight:700;margin:14px 0 0}
+#cont{display:contents}#bContX{font-size:.8em;line-height:1}.tools{align-items:center}.tools .btn{line-height:1;flex:0 0 auto}
+.av{width:30px;height:30px;border-radius:50%;object-fit:cover;display:inline-grid;place-items:center;background:var(--back);color:#fff;font-weight:700;font-size:.8em;vertical-align:middle;margin-right:8px;border:2px solid var(--line);flex:none}
+.tools .av{width:26px;height:26px;margin:0 8px 0 -6px}.avb{padding:0 6px}.avb .av{width:44px;height:44px;margin:0;font-size:1.1em}.lbr b,.fam h3{display:flex;align-items:center}
 </style>
 </head>
 <body>
@@ -176,7 +179,7 @@ html[lang^=zh] body,html[lang^=zh] button{font-family:"Punct","Atkinson Hyperleg
       <button class="btn sm" id="bSet">Settings</button><button class="btn sm" id="bLang" aria-label="Language / 语言"></button>
     </div></div>
   <p class="sub">Gentle games for memory, numbers, logic and shapes. Take your time – there are no wrong turns here. Play a little each day and watch your garden grow.</p>
-  <div class="garden" id="garden"></div><h2 class="sec">Memory games</h2><div class="levels" id="acts"></div><h2 class="sec">Numbers, logic and shapes</h2><div class="levels" id="acts2"></div><h2 class="sec">Words</h2><div class="levels" id="acts3"></div><h2 class="sec" id="mph">Matching pairs</h2><div class="decks" id="decks"></div><div class="levels" id="levels"></div>
+  <div class="garden" id="garden"></div><h2 class="sec">Memory games</h2><div class="levels" id="acts"></div><h2 class="sec">Numbers</h2><div class="levels" id="acts2"></div><h2 class="sec">Logic</h2><div class="levels" id="acts3"></div><h2 class="sec">Shapes and time</h2><div class="levels" id="acts4"></div><h2 class="sec">Observation</h2><div class="levels" id="acts5"></div><h2 class="sec">Words</h2><div class="levels" id="acts6"></div><h2 class="sec" id="mph">Matching pairs</h2><div class="decks" id="decks"></div><div class="levels" id="levels"></div>
   <p class="tip">Playing a little each day keeps the mind active. Short, regular sessions work best.</p>
 </section>
 
@@ -354,11 +357,11 @@ function logPlay(g,r,s){var p=me(),t=dstr();if(p.last!==t){p.streak=p.last===yst
 var MG={seq:{n:"Remember the order",d:"Watch the pictures light up, then repeat them.",ic:"🔔"},miss:{n:"What’s missing?",d:"One picture disappears. Which one was it?",ic:"🧺"},sort:{n:"Sort it",d:"Put each picture in the right group.",ic:"🗂️"}};
 function renderExtra(){
   var p=me(),s=curStreak(p),em=s<3?"🌱":s<7?"🌿":s<14?"🌷":"🌻";
-  $("bPl").textContent="Player: "+p.name;$("decks").innerHTML="<b>Choose pictures:</b>"+Object.keys(DN).filter(function(k){return k!=="photos"||(save.photos||[]).length>=6}).map(function(k){return '<button class="btn sm tg" data-d="'+k+'" aria-pressed="'+((save.deck||"garden")===k)+'">'+DN[k]+"</button>"}).join("");
+  $("bPl").innerHTML=avHtml(p)+"Player: "+esc(p.name);$("decks").innerHTML="<b>Choose pictures:</b>"+Object.keys(DN).filter(function(k){return k!=="photos"||(save.photos||[]).length>=6}).map(function(k){return '<button class="btn sm tg" data-d="'+k+'" aria-pressed="'+((save.deck||"garden")===k)+'">'+DN[k]+"</button>"}).join("");
   var tmn=Math.round(p.log.filter(function(x){return x.d===dstr()}).reduce(function(a,x){return a+x.s},0)/60);$("garden").innerHTML='<div class="gr" aria-hidden="true">'+(s?new Array(Math.min(s,14)+1).join(em):"🌰")+'</div><div><b>'+(s?s+"-day streak":"Play today to plant your first seed")+'</b><br><small>'+(s?(p.last===dstr()?"Today’s game is done ✓":"Play today to keep your garden growing"):"Each day you play, your garden grows.")+(tmn?"<br>Today: "+tmn+" min":"")+'</small></div>';
-  ["acts","acts2","acts3"].forEach(function(id,gi){$(id).innerHTML=Object.keys(MG).filter(function(k){return(MG[k].g||0)===gi}).map(function(k){var m=MG[k];return '<button class="lv" data-g="'+k+'"><span class="n" style="background:var(--back)">'+m.ic+'</span><b>'+m.n+'</b><small>'+m.d+'</small></button>'}).join("")});
+  ["acts","acts2","acts3","acts4","acts5","acts6"].forEach(function(id,gi){$(id).innerHTML=Object.keys(MG).filter(function(k){return(MG[k].g||0)===gi}).map(function(k){var m=MG[k];return '<button class="lv" data-g="'+k+'"><span class="n" style="background:var(--back)">'+m.ic+'</span><b>'+m.n+'</b><small>'+m.d+'</small></button>'}).join("")});
 }
-["acts","acts2","acts3"].forEach(function(id){$(id).addEventListener("click",function(e){var b=e.target.closest(".lv");if(b)startMG(b.dataset.g)})});
+["acts","acts2","acts3","acts4","acts5","acts6"].forEach(function(id){$(id).addEventListener("click",function(e){var b=e.target.closest(".lv");if(b)startMG(b.dataset.g)})});
 /* ---------- settings & players ---------- */
 var SET=[["snd","Sound"],["speak","Spoken picture names"],["fs","Larger text"],["hc","Large high-contrast mode"],["cb","Colour-blind-safe colours"],["lh","Left-handed layout"],["brk","Break reminders"]];
 function openSet(){
@@ -367,12 +370,14 @@ function openSet(){
 }
 function openPl(){
   var ks=Object.keys(save.pr);
-  overlay('<h2>Who is playing?</h2><div class="list">'+ks.map(function(id){var p=save.pr[id];return '<div class="prow"><button class="btn tg" data-p="'+id+'" aria-pressed="'+(id===save.cp)+'">'+esc(p.name)+(id===save.cp?" ✓":"")+'</button>'+(ks.length>1?'<button class="btn sm" data-x="'+id+'">Remove</button>':'')+'</div>'}).join("")+'</div><label class="lab">New player’s name<input id="pn" maxlength="14" autocomplete="off"></label><div class="row"><button class="btn main" id="pa">Add player</button><button class="btn" id="pd">Done</button></div>');
-  $("pd").onclick=closeOv;
+  overlay('<h2>Who is playing?</h2><div class="list">'+ks.map(function(id){var p=save.pr[id];return '<div class="prow"><button class="btn sm ic avb" data-av="'+id+'" aria-label="Change photo">'+avHtml(p)+'</button><button class="btn tg" data-p="'+id+'" aria-pressed="'+(id===save.cp)+'">'+esc(p.name)+(id===save.cp?" ✓":"")+'</button>'+(ks.length>1?'<button class="btn sm" data-x="'+id+'">Remove</button>':'')+'</div>'}).join("")+'</div>'+(me().av?'<button class="btn sm" data-avx="1">Remove my photo</button>':'')+'<input type="file" id="avf" accept="image/*" class="hidden"><label class="lab">New player’s name<input id="pn" maxlength="14" autocomplete="off"></label><div class="row"><button class="btn main" id="pa">Add player</button><button class="btn" id="pd">Done</button></div>');
+  $("pd").onclick=closeOv;$("avf").onchange=function(){var id=this.dataset.t,f=this.files[0];if(!f||!id)return;shrink(f,function(dd){if(dd){save.pr[id].av=dd;persist();renderHome()}openPl()},96)};
   $("pa").onclick=function(){var n=$("pn").value.trim();if(!n){$("pn").focus();return}persist();var id="p"+Date.now();save.pr[id]=newP(n);save.cp=id;load();persist();renderHome();openPl()};
 }
 $("box").addEventListener("click",function(e){
-  var b=e.target.closest("button[data-k],button[data-d],button[data-p],button[data-x],button[data-th],button[data-m],button[data-ph],button[data-fc],button[data-pha],button[data-bn]");if(!b)return;var d=b.dataset;
+  var b=e.target.closest("button[data-k],button[data-d],button[data-p],button[data-x],button[data-th],button[data-m],button[data-ph],button[data-fc],button[data-pha],button[data-bn],button[data-av],button[data-avx]");if(!b)return;var d=b.dataset;
+  if(d.av){$("avf").dataset.t=d.av;$("avf").click();return}
+  if(d.avx){delete me().av;persist();renderHome();openPl();return}
   if(d.bn){save.bn=+d.bn;persist();openSet();return}
   if(d.pha){if(!b.dataset.sure){b.dataset.sure=1;b.textContent="Tap again to remove";return}save.photos=[];if(save.deck==="photos")save.deck="garden";persist();renderHome();openSet();return}
   if(d.ph){save.photos.splice(+d.ph,1);if(save.photos.length<6&&save.deck==="photos")save.deck="garden";persist();renderHome();openSet();return}
@@ -395,7 +400,7 @@ function famView(){
     var tr=A===null?"No games played this week yet.":B===null?"A good start – keep going.":A>B+.05?"Doing a little better than last week.":A<B-.05?"A little lower than last week. That is normal; a short game each day helps.":"Steady compared with last week.";
     var mx=Math.max.apply(null,m.concat([60])),st=0;for(var k in p.stars)st+=p.stars[k];
     var bars=m.map(function(s,i){var d=new Date();d.setDate(d.getDate()-(6-i));return '<div class="bc"><i style="height:'+Math.round(s/mx*70)+'px"></i><small>'+Math.round(s/60)+' min</small><span>'+dn[d.getDay()]+'</span></div>'}).join("");
-    return '<section class="fam"><h3>'+esc(p.name)+'’s week'+(id===save.cp?" ✓":"")+'</h3><div class="bars s">'+bars+'</div><p>'+g+' games, '+Math.round(tm/60)+' minutes this week<br>Matching level reached: '+Math.min(p.unlocked||1,6)+' of 6, with '+st+' stars<br>'+tr+'</p><button class="btn sm" data-fc="'+id+'">Clear history</button></section>'}).join("");
+    return '<section class="fam"><h3>'+avHtml(p)+esc(p.name)+'’s week'+(id===save.cp?" ✓":"")+'</h3><div class="bars s">'+bars+'</div><p>'+g+' games, '+Math.round(tm/60)+' minutes this week<br>Matching level reached: '+Math.min(p.unlocked||1,6)+' of 6, with '+st+' stars<br>'+tr+'</p><button class="btn sm" data-fc="'+id+'">Clear history</button></section>'}).join("");
   overlay('<h2>Family view</h2>'+blocks+'<div class="row"><button class="btn main" id="fd">Done</button><button class="btn sm" id="fs2">Stop sharing</button></div>');
   $("fd").onclick=closeOv;$("fs2").onclick=function(){save.famOk=0;persist();closeOv()};
 }
@@ -486,7 +491,12 @@ function rWrd(){
   $("mmsg").textContent="Tap the letters in the right order to spell the word.";say(it.n);
   g.h=function(b){if(b.disabled)return;var c=sc[+b.dataset.a];if(c===L[pos]){pos++;b.disabled=true;b.style.opacity=.35;$("sl").textContent=slots();if(pos===L.length)res(bad<3,"Yes – “"+it.n+"”!")}else{bad++;$("mmsg").textContent="Not that letter – try another."}};
 }
-Object.assign(MG,{wm:{n:"Match the word",d:"Pick the word that names the picture.",ic:"📖",g:2}});
+Object.assign(MG,{sub:{n:"Take away",d:"Find how much to take away.",ic:"➖"},wm:{n:"Match the word",d:"Pick the word that names the picture.",ic:"📖",g:2}});
+function rSub(){var r=mg.r,hi=r<3?20:r<5?50:100,a=rnd(Math.floor(hi/2),hi),d=rnd(r<3?2:5,Math.max(r<3?5:9,Math.floor(a/2))),b=a-d;
+  $("mmsg").textContent="How much do you take away?";
+  ask('<div class="seqline">'+a+' − ? = '+b+'</div>',numOpts(d),d,"Yes – "+d+"!","The answer was "+d+". Well tried!",2);
+}
+var GRP={seq:0,miss:0,num:1,sum:1,sub:1,tbl:1,sort:2,odd:2,shp:3,clk:3,diff:4,wrd:5,wm:5};for(var gk in GRP)MG[gk].g=GRP[gk];
 function rWm(){
   var it=pick(allItems(),4),a=it[0];
   $("mmsg").textContent="Which word matches the picture?";say(a.n);
@@ -506,7 +516,7 @@ function nextR(){
   if(!mg)return;
   if(mg.r>=mg.R)return mdone();
   mg.r++;mg.h=null;mg.ans=null;mg.last=null;$("hRound").innerHTML='<span class="sr">Round '+mg.r+' of '+mg.R+'</span><span class="dots" aria-hidden="true">'+mg.hist.concat(new Array(mg.R-mg.hist.length).fill(null)).map(function(x,i){return"<i class=\""+(x===true?"d":x===false?"m":i===mg.r-1?"c":"")+"\"></i>"}).join("")+"</span>";$("mp").innerHTML="";
-  ({seq:rSeq,miss:rMiss,sort:rSort,num:rNum,sum:rSum,odd:rOdd,shp:rShp,tbl:rTbl,clk:rClk,diff:rDiff,wrd:rWrd,wm:rWm})[mg.t]();
+  ({seq:rSeq,miss:rMiss,sort:rSort,num:rNum,sum:rSum,odd:rOdd,shp:rShp,tbl:rTbl,clk:rClk,diff:rDiff,wrd:rWrd,wm:rWm,sub:rSub})[mg.t]();
 }
 function res(good,note){
   var g=mg;g.h=null;g.hist.push(!!good);if(good)g.ok++;if(g.t==="seq"||g.t==="miss")g.n=Math.max(g.lo,Math.min(8,g.n+(good?1:-1)));
@@ -559,21 +569,22 @@ function mdone(){
 addEventListener("resize",function(){var g=$("grid");if($("game").classList.contains("hidden")||!g.children.length)return;var c=COLS[LEVELS[cur].p],rows=Math.ceil(g.children.length/c);g.style.setProperty("--mw",Math.min(1050,c*Math.min(190,(innerHeight-230)/rows))+"px")});
 
 function award(c,key,secs){var p=me();p.ok=(p.ok||0)+c;p.gp=(p.gp||0)+1;if(key){p.bt=p.bt||{};if(!p.bt[key]||secs<p.bt[key])p.bt[key]=Math.max(1,secs)}persist()}
+function avHtml(p){return p.av?'<img class="av" src="'+p.av+'" alt="">':'<span class="av" aria-hidden="true">'+esc((p.name||"?").trim().charAt(0).toUpperCase())+'</span>'}
 function trophy(i){var c=["#E0A800","#A9B4BE","#C27A3C"][i],t=["Gold trophy","Silver trophy","Bronze trophy"][i];return '<svg class="tro" viewBox="0 0 24 24" role="img" aria-label="'+t+'"><path d="M7 3h10v5a5 5 0 0 1-10 0z" fill="'+c+'"/><path d="M7 5H3.5v1.5A3.5 3.5 0 0 0 7 10M17 5h3.5v1.5A3.5 3.5 0 0 1 17 10" fill="none" stroke="'+c+'" stroke-width="1.8"/><rect x="10.7" y="12.5" width="2.6" height="4" fill="'+c+'"/><rect x="7.5" y="17" width="9" height="3.2" rx="1" fill="'+c+'"/></svg>'}
 function breakHtml(){return '<b>Remind me to rest every</b><div class="prow">'+[10,15,20,30].map(function(m){return '<button class="btn tg" data-bn="'+m+'" aria-pressed="'+((save.bn||15)===m)+'">'+m+' min</button>'}).join("")+'</div>'}
 function addBreak(){if(!save.brk||$("ov").classList.contains("hidden"))return;var p=me(),t=dstr(),m=Math.floor(p.log.filter(function(x){return x.d===t}).reduce(function(a,x){return a+x.s},0)/60),n=Math.floor(m/(save.bn||15));if(!p.bk||p.bk.d!==t)p.bk={d:t,n:0};if(n>p.bk.n){p.bk.n=n;persist();var r=$("box").querySelector(".row");if(r)r.insertAdjacentHTML("beforebegin",'<p class="brk">You’ve played '+m+' minutes today – lovely! Time for a drink, a stretch or a rest.</p>')}}
 var _end=end;end=function(ok){_end(ok);addBreak()};var _md=mdone;mdone=function(){_md();addBreak()};
 function photosHtml(){var ph=save.photos||[];return '<b>My photos for Matching pairs</b><p class="tip">Photos stay on this device. Add at least 6, then choose “My photos” in Matching pairs.</p><div class="thumbs">'+ph.map(function(p,i){return '<span class="th"><img src="'+p.d+'" alt=""><button class="btn sm ic" data-ph="'+i+'" aria-label="Remove photo">✕</button></span>'}).join("")+'</div>'+(ph.length?'<button class="btn sm" data-pha="1">Remove all photos</button> ':'')+'<input type="file" id="phf" accept="image/*" multiple class="hidden"><button class="btn sm" id="pha">Add photos</button>'}
-function shrink(f,cb){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var m=Math.min(im.width,im.height),c=document.createElement("canvas");c.width=c.height=192;c.getContext("2d").drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,192,192);cb(c.toDataURL("image/jpeg",.78))};im.onerror=function(){cb(null)};im.src=r.result};r.onerror=function(){cb(null)};r.readAsDataURL(f)}
+function shrink(f,cb,z){z=z||192;var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var m=Math.min(im.width,im.height),c=document.createElement("canvas");c.width=c.height=z;c.getContext("2d").drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,z,z);cb(c.toDataURL("image/jpeg",.78))};im.onerror=function(){cb(null)};im.src=r.result};r.onerror=function(){cb(null)};r.readAsDataURL(f)}
 function addPhotos(fl){save.photos=save.photos||[];var q=[].slice.call(fl).slice(0,24-save.photos.length);(function nx(){var f=q.shift();if(!f){persist();renderHome();openSet();return}shrink(f,function(d){if(d&&save.photos.length<24)save.photos.push({d:d,n:"photo"});nx()})})()}
 function lbView(key){
  key=key||"all";var ids=Object.keys(save.pr),keys={},pts={};
  ids.forEach(function(id){var b=save.pr[id].bt||{};for(var k in b)keys[k]=1});
  Object.keys(keys).forEach(function(k){ids.filter(function(id){return(save.pr[id].bt||{})[k]}).sort(function(a,b){return save.pr[a].bt[k]-save.pr[b].bt[k]}).forEach(function(id,i){pts[id]=(pts[id]||0)+ids.length-i})});
- var all=ids.map(function(id){var p=save.pr[id],bt=p.bt||{},m=Object.keys(bt).reduce(function(a,k){return a===null||bt[k]<a?bt[k]:a},null);return{n:p.name,me:id===save.cp,gp:Math.max(p.gp||0,(p.log||[]).length),pts:pts[id]||0,m:m,t:key==="all"?m:bt[key]}});
+ var all=ids.map(function(id){var p=save.pr[id],bt=p.bt||{},m=Object.keys(bt).reduce(function(a,k){return a===null||bt[k]<a?bt[k]:a},null);return{n:p.name,a:avHtml(p),me:id===save.cp,gp:Math.max(p.gp||0,(p.log||[]).length),pts:pts[id]||0,m:m,t:key==="all"?m:bt[key]}});
  var byG=all.slice().sort(function(a,b){return b.gp-a.gp||(a.m||1e9)-(b.m||1e9)});
  var byT=all.slice().sort(key==="all"?function(a,b){return b.pts-a.pts||(a.m||1e9)-(b.m||1e9)}:function(a,b){return(a.t||1e9)-(b.t||1e9)});
- function row(r,i,v,has){return'<div class="lbr'+(r.me?" me":"")+'"><span class="rk">'+(has&&i<3?trophy(i):i+1)+'</span><b>'+esc(r.n)+'</b><span>'+v+'</span></div>'}
+ function row(r,i,v,has){return'<div class="lbr'+(r.me?" me":"")+'"><span class="rk">'+(has&&i<3?trophy(i):i+1)+'</span><b>'+r.a+esc(r.n)+'</b><span>'+v+'</span></div>'}
  function list(rows,val,has){var h=rows.slice(0,10).map(function(r,i){return row(r,i,val(r),has(r))}).join(""),mi=rows.findIndex(function(r){return r.me});if(mi>=10)h+=row(rows[mi],mi,val(rows[mi]),false);return h}
  var opts=[["all","Overall – fastest all-correct times"]].concat(Object.keys(MG).map(function(k){return[k,MG[k].n]})).concat([1,2,3,4,5,6].map(function(n){return["p"+n,"Matching pairs – Level "+n]}));
  overlay('<h2>Leaderboard</h2><h3>Most games played</h3><p class="tip">Ranked by the number of games finished.</p><div class="list">'+list(byG,function(r){return r.gp+" games"},function(r){return r.gp>0})+'</div><h3>Best timings</h3><p class="tip">Ranked by fastest games with every answer correct. “Overall” adds points from each game.</p><label class="lab">Ranking<select id="lbs">'+opts.map(function(o){return'<option value="'+o[0]+'"'+(o[0]===key?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></label><div class="list">'+list(byT,function(r){return key==="all"?r.pts+" pts"+(r.m?"<br><small>Best time: "+fmt(r.m)+"</small>":""):(r.t?fmt(r.t):"—")},function(r){return key==="all"?r.pts>0:!!r.t})+'</div><div class="row"><button class="btn main" id="lbd">Done</button></div>');
@@ -584,13 +595,13 @@ var _re=renderExtra;renderExtra=function(){_re();renderCont()};
 function renderCont(){var lg=me().lg,ok=lg&&(lg.k!=="p"||lg.i<save.unlocked)&&(lg.k==="p"||MG[lg.k]);$("cont").classList.toggle("hidden",!ok)}
 $("bCont").onclick=function(){var lg=me().lg;if(!lg)return;try{ac&&ac.resume()}catch(x){}lg.k==="p"?start(lg.i):startMG(lg.k)};
 $("bContX").onclick=function(){me().lg=null;persist();renderCont()};
-save.col=save.col||{};if(save.brk===undefined)save.brk=1;
+save.cl7=save.cl7||{};if(save.brk===undefined)save.brk=1;
 [].forEach.call(document.querySelectorAll("#home h2.sec"),function(h,i){
  var body=[],n=h.nextElementSibling;while(n&&n.tagName!=="H2"&&!n.classList.contains("tip")){body.push(n);n=n.nextElementSibling}
  h.tabIndex=0;h.setAttribute("role","button");
  function set(c){h.setAttribute("aria-expanded",!c);body.forEach(function(b){b.classList.toggle("hidden",c)})}
- function tg(){save.col[i]=!save.col[i];set(save.col[i]);persist()}
- h.onclick=tg;h.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();tg()}};set(!!save.col[i])});
+ function tg(){save.cl7[i]=!save.cl7[i];set(save.cl7[i]);persist()}
+ h.onclick=tg;h.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();tg()}};set(!!save.cl7[i])});
 renderCont();
 $("bPl").onclick=openPl;$("bSet").onclick=openSet;$("bFam").onclick=famView;
 load();applyPrefs();renderHome();
