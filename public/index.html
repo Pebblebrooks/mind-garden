@@ -168,6 +168,8 @@ html[lang^=zh] body,html[lang^=zh] button{font-family:"Punct","Atkinson Hyperleg
 #cont{display:contents}#bContX{font-size:.8em;line-height:1}.tools{align-items:center}.tools .btn{line-height:1;flex:0 0 auto}
 .av{width:30px;height:30px;border-radius:50%;object-fit:cover;display:inline-grid;place-items:center;background:var(--back);color:#fff;font-weight:700;font-size:.8em;vertical-align:middle;margin-right:8px;border:2px solid var(--line);flex:none}
 .tools .av{width:26px;height:26px;margin:0 8px 0 -6px}.avb{padding:0 6px}.avb .av{width:44px;height:44px;margin:0;font-size:1.1em}.lbr b,.fam h3{display:flex;align-items:center}
+.avgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:8px;margin:10px 0}.avgrid .btn{min-height:56px;font-size:1.6em;padding:0}
+.av.em{background:var(--panel);font-size:1.25em}#bLang{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB","Source Han Sans SC","WenQuanYi Micro Hei",Verdana,sans-serif}
 </style>
 </head>
 <body>
@@ -370,14 +372,15 @@ function openSet(){
 }
 function openPl(){
   var ks=Object.keys(save.pr);
-  overlay('<h2>Who is playing?</h2><div class="list">'+ks.map(function(id){var p=save.pr[id];return '<div class="prow"><button class="btn sm ic avb" data-av="'+id+'" aria-label="Change photo">'+avHtml(p)+'</button><button class="btn tg" data-p="'+id+'" aria-pressed="'+(id===save.cp)+'">'+esc(p.name)+(id===save.cp?" ✓":"")+'</button>'+(ks.length>1?'<button class="btn sm" data-x="'+id+'">Remove</button>':'')+'</div>'}).join("")+'</div>'+(me().av?'<button class="btn sm" data-avx="1">Remove my photo</button>':'')+'<input type="file" id="avf" accept="image/*" class="hidden"><label class="lab">New player’s name<input id="pn" maxlength="14" autocomplete="off"></label><div class="row"><button class="btn main" id="pa">Add player</button><button class="btn" id="pd">Done</button></div>');
+  overlay('<h2>Who is playing?</h2><div class="list">'+ks.map(function(id){var p=save.pr[id];return '<div class="prow"><button class="btn sm ic avb" data-av="'+id+'" aria-label="Change photo">'+avHtml(p)+'</button><button class="btn tg" data-p="'+id+'" aria-pressed="'+(id===save.cp)+'">'+esc(p.name)+(id===save.cp?" ✓":"")+'</button>'+(ks.length>1?'<button class="btn sm" data-x="'+id+'">Remove</button>':'')+'</div>'}).join("")+'</div>'+((me().av||me().ae)?'<button class="btn sm" data-avx="me">Remove my photo</button>':'')+'<input type="file" id="avf" accept="image/*" class="hidden"><label class="lab">New player’s name<input id="pn" maxlength="14" autocomplete="off"></label><div class="row"><button class="btn main" id="pa">Add player</button><button class="btn" id="pd">Done</button></div>');
   $("pd").onclick=closeOv;$("avf").onchange=function(){var id=this.dataset.t,f=this.files[0];if(!f||!id)return;shrink(f,function(dd){if(dd){save.pr[id].av=dd;persist();renderHome()}openPl()},96)};
   $("pa").onclick=function(){var n=$("pn").value.trim();if(!n){$("pn").focus();return}persist();var id="p"+Date.now();save.pr[id]=newP(n);save.cp=id;load();persist();renderHome();openPl()};
 }
 $("box").addEventListener("click",function(e){
-  var b=e.target.closest("button[data-k],button[data-d],button[data-p],button[data-x],button[data-th],button[data-m],button[data-ph],button[data-fc],button[data-pha],button[data-bn],button[data-av],button[data-avx]");if(!b)return;var d=b.dataset;
-  if(d.av){$("avf").dataset.t=d.av;$("avf").click();return}
-  if(d.avx){delete me().av;persist();renderHome();openPl();return}
+  var b=e.target.closest("button[data-k],button[data-d],button[data-p],button[data-x],button[data-th],button[data-m],button[data-ph],button[data-fc],button[data-pha],button[data-bn],button[data-av],button[data-avx],button[data-ae]");if(!b)return;var d=b.dataset;
+  if(d.av){openAv(d.av);return}
+  if(d.ae){var q=save.pr[avT];q.ae=d.ae;delete q.av;persist();renderHome();openPl();return}
+  if(d.avx){var q2=d.avx==="me"?me():save.pr[avT];delete q2.av;delete q2.ae;persist();renderHome();openPl();return}
   if(d.bn){save.bn=+d.bn;persist();openSet();return}
   if(d.pha){if(!b.dataset.sure){b.dataset.sure=1;b.textContent="Tap again to remove";return}save.photos=[];if(save.deck==="photos")save.deck="garden";persist();renderHome();openSet();return}
   if(d.ph){save.photos.splice(+d.ph,1);if(save.photos.length<6&&save.deck==="photos")save.deck="garden";persist();renderHome();openSet();return}
@@ -491,12 +494,39 @@ function rWrd(){
   $("mmsg").textContent="Tap the letters in the right order to spell the word.";say(it.n);
   g.h=function(b){if(b.disabled)return;var c=sc[+b.dataset.a];if(c===L[pos]){pos++;b.disabled=true;b.style.opacity=.35;$("sl").textContent=slots();if(pos===L.length)res(bad<3,"Yes – “"+it.n+"”!")}else{bad++;$("mmsg").textContent="Not that letter – try another."}};
 }
-Object.assign(MG,{sub:{n:"Take away",d:"Find how much to take away.",ic:"➖"},wm:{n:"Match the word",d:"Pick the word that names the picture.",ic:"📖",g:2}});
+Object.assign(MG,{rem:{n:"Remember the picture",d:"Look at one picture, then find it again.",ic:"💭"},cnt:{n:"Count down",d:"Keep taking away the same number.",ic:"⏬"},add:{n:"Missing number",d:"Find the number that completes the sum.",ic:"🎯"},same:{n:"Same group",d:"Find the picture from the same group.",ic:"🤝"},time:{n:"Time later",d:"Work out the time after a few hours.",ic:"⏳"},count:{n:"Count it",d:"Count how many of one picture you can see.",ic:"🔟"},find:{n:"Find it",d:"Find the named picture in the crowd.",ic:"🕵️"},pic:{n:"Find the picture",d:"Read the word, then pick its picture.",ic:"👀"},sub:{n:"Take away",d:"Find how much to take away.",ic:"➖"},wm:{n:"Match the word",d:"Pick the word that names the picture.",ic:"📖",g:2}});
 function rSub(){var r=mg.r,hi=r<3?20:r<5?50:100,a=rnd(Math.floor(hi/2),hi),d=rnd(r<3?2:5,Math.max(r<3?5:9,Math.floor(a/2))),b=a-d;
   $("mmsg").textContent="How much do you take away?";
   ask('<div class="seqline">'+a+' − ? = '+b+'</div>',numOpts(d),d,"Yes – "+d+"!","The answer was "+d+". Well tried!",2);
 }
-var GRP={seq:0,miss:0,num:1,sum:1,sub:1,tbl:1,sort:2,odd:2,shp:3,clk:3,diff:4,wrd:5,wm:5};for(var gk in GRP)MG[gk].g=GRP[gk];
+var GRP={seq:0,miss:0,rem:0,num:1,sum:1,sub:1,tbl:1,cnt:1,add:1,sort:2,odd:2,same:2,shp:3,clk:3,time:3,diff:4,count:4,find:4,wrd:5,wm:5,pic:5};for(var gk in GRP)MG[gk].g=GRP[gk];
+function rRem(){var g=mg,it=pick(allItems(),4),a=it[0],c=3;$("mp").innerHTML='<div class="big st one">'+a.e+'</div>';
+ (function t(){if(mg!==g)return;if(c>0){$("mmsg").textContent="Remember this… "+c;c--;pt(t,1000);return}
+  $("mmsg").textContent="Which picture did you see?";ask('',shuffle(it.slice()).map(function(x){return{v:x.e,h:x.e,l:x.n}}),a.e,"Yes – the "+a.n+"!","It was the "+a.n+". Well tried!")})()}
+function rCnt(){var r=mg.r,s=[2,3,5,10,4,6,7,9][rnd(0,r<3?3:7)],a=rnd(60,100);
+ if(r<4){var n=a-3*s;$("mmsg").textContent="Keep taking away "+s+". What comes next?";ask('<div class="seqline">'+a+', '+(a-s)+', '+(a-2*s)+', ?</div>',numOpts(n),n,"Yes – "+n+"!","The answer was "+n+". Well tried!",2)}
+ else{var b=rnd(20,45),l=b%s;$("mmsg").textContent="Keep taking away "+s+" from "+b+". What is the last number you reach?";ask('<div class="seqline">'+b+' − '+s+' − '+s+' − …</div>',numOpts(l),l,"Yes – "+l+"!","The answer was "+l+". Well tried!",2)}}
+function rAdd(){var r=mg.r,t=r<3?rnd(10,20):r<5?rnd(20,50):rnd(50,100),d=rnd(2,Math.floor(t/2)),b=t-d;
+ $("mmsg").textContent="Find the missing number.";ask('<div class="seqline">'+b+' + ? = '+t+'</div>',numOpts(d),d,"Yes – "+d+"!","The answer was "+d+". Well tried!",2)}
+function rSame(){var ks=Object.keys(CATS),k=pick(ks,1)[0],o=pick(CATS[k].map(P),2),y=o[1],ds=pick(ks.filter(function(z){return z!==k}),3).map(function(z){return P(CATS[z][rnd(0,4)])});
+ $("mmsg").textContent="Which one belongs to the same group?";
+ ask('<div class="big st one">'+o[0].e+'</div>',shuffle(ds.concat([y])).map(function(z){return{v:z.e,h:z.e,l:z.n}}),y.e,"Yes – the "+y.n+"!","It was the "+y.n+". Well tried!")}
+function rTime(){var r=mg.r,h=rnd(1,12),n=rnd(2,r<3?3:r<5?5:8),m=r<3?0:[0,30][rnd(0,1)];
+ var f=function(H){return(((H-1+120)%12)+1)+":"+("0"+m).slice(-2)},ans=f(h+n),c=[ans];[f(h+n+1),f(h+n-1),f(h-n)].forEach(function(t){if(c.indexOf(t)<0)c.push(t)});
+ while(c.length<4){var t=f(rnd(1,12));if(c.indexOf(t)<0)c.push(t)}
+ $("mmsg").textContent="What time will it be in "+n+" hours?";
+ ask('<div class="seqline">'+f(h)+'</div>',shuffle(c).map(function(t){return{v:t,h:t}}),ans,"Yes – it’s "+ans+"!","It was "+ans+". Well tried!",2)}
+function rCount(){var r=mg.r,tot=r<3?8:r<5?10:12,n=rnd(2,r<3?5:7),it=pick(allItems(),3),t=it[0],cells=[];
+ for(var i=0;i<n;i++)cells.push(t.e);for(var j=n;j<tot;j++)cells.push(it[1+j%2].e);
+ $("mmsg").textContent="How many of this picture can you see?";
+ ask('<div class="big st one">'+t.e+'</div><div class="gridm" style="--c:4">'+shuffle(cells).map(function(e){return'<div class="big st sm">'+e+'</div>'}).join("")+'</div>',numOpts(n),n,"Yes – "+n+"!","The answer was "+n+". Well tried!",2)}
+function rFind(){var r=mg.r,n=r<3?6:r<5?9:12,it=pick(allItems(),n),a=it[0];
+ $("mmsg").textContent="Find the "+a.n+".";say(a.n);
+ ask('',shuffle(it.slice()).map(function(x){return{v:x.e,h:x.e,l:x.n}}),a.e,"Yes – you spotted it!","It was the "+a.n+". Well tried!");
+ $("mp").querySelector(".gridm").style.setProperty("--c",n===6?3:n===9?3:4)}
+function rPic(){var it=pick(allItems(),4),a=it[0];
+ $("mmsg").textContent="Which picture matches the word?";
+ ask('<div class="seqline">'+a.n+'</div>',shuffle(it.slice()).map(function(x){return{v:x.e,h:x.e,l:x.n}}),a.e,"Yes – the "+a.n+"!","It was the "+a.n+". Well tried!")}
 function rWm(){
   var it=pick(allItems(),4),a=it[0];
   $("mmsg").textContent="Which word matches the picture?";say(a.n);
@@ -516,7 +546,7 @@ function nextR(){
   if(!mg)return;
   if(mg.r>=mg.R)return mdone();
   mg.r++;mg.h=null;mg.ans=null;mg.last=null;$("hRound").innerHTML='<span class="sr">Round '+mg.r+' of '+mg.R+'</span><span class="dots" aria-hidden="true">'+mg.hist.concat(new Array(mg.R-mg.hist.length).fill(null)).map(function(x,i){return"<i class=\""+(x===true?"d":x===false?"m":i===mg.r-1?"c":"")+"\"></i>"}).join("")+"</span>";$("mp").innerHTML="";
-  ({seq:rSeq,miss:rMiss,sort:rSort,num:rNum,sum:rSum,odd:rOdd,shp:rShp,tbl:rTbl,clk:rClk,diff:rDiff,wrd:rWrd,wm:rWm,sub:rSub})[mg.t]();
+  ({seq:rSeq,miss:rMiss,sort:rSort,num:rNum,sum:rSum,odd:rOdd,shp:rShp,tbl:rTbl,clk:rClk,diff:rDiff,wrd:rWrd,wm:rWm,sub:rSub,rem:rRem,cnt:rCnt,add:rAdd,same:rSame,time:rTime,count:rCount,find:rFind,pic:rPic})[mg.t]();
 }
 function res(good,note){
   var g=mg;g.h=null;g.hist.push(!!good);if(good)g.ok++;if(g.t==="seq"||g.t==="miss")g.n=Math.max(g.lo,Math.min(8,g.n+(good?1:-1)));
@@ -543,7 +573,7 @@ function rMiss(){
   (function tick(){
     if(mg!==g)return;
     if(c>0){$("mmsg").textContent="Remember these… "+c;c--;pt(tick,1000);return}
-    var opts=shuffle([it[m]].concat(pick(it.filter(function(x,i){return i!==m}),Math.min(3,n-1))));
+    var shown=it.map(function(x){return x.e}),opts=shuffle([it[m]].concat(pick(allItems().filter(function(x){return shown.indexOf(x.e)<0}),3)));
     $("mp").innerHTML='<div class="gridm" style="--c:'+cols+'">'+it.map(function(x,i){return i===m?'<div class="big st q">?</div>':cell(x)}).join("")+'</div><div class="gridm" style="--c:'+opts.length+'">'+opts.map(function(x){return '<button class="big" data-a="'+x.e+'" aria-label="'+x.n+'">'+x.e+'</button>'}).join("")+'</div>';
     $("mmsg").textContent="One has disappeared. Which one was it?";
     g.ans=it[m].e;g.h=function(x){var ok=x.dataset.a===it[m].e;say(it[m].n);res(ok,ok?"Yes – the "+it[m].n+"!":"It was the "+it[m].n+". Well tried!")};
@@ -569,7 +599,11 @@ function mdone(){
 addEventListener("resize",function(){var g=$("grid");if($("game").classList.contains("hidden")||!g.children.length)return;var c=COLS[LEVELS[cur].p],rows=Math.ceil(g.children.length/c);g.style.setProperty("--mw",Math.min(1050,c*Math.min(190,(innerHeight-230)/rows))+"px")});
 
 function award(c,key,secs){var p=me();p.ok=(p.ok||0)+c;p.gp=(p.gp||0)+1;if(key){p.bt=p.bt||{};if(!p.bt[key]||secs<p.bt[key])p.bt[key]=Math.max(1,secs)}persist()}
-function avHtml(p){return p.av?'<img class="av" src="'+p.av+'" alt="">':'<span class="av" aria-hidden="true">'+esc((p.name||"?").trim().charAt(0).toUpperCase())+'</span>'}
+function avHtml(p){return p.av?'<img class="av" src="'+p.av+'" alt="">':p.ae?'<span class="av em" aria-hidden="true">'+p.ae+'</span>':'<span class="av" aria-hidden="true">'+esc((p.name||"?").trim().charAt(0).toUpperCase())+'</span>'}
+function avHtmlOld(p){return p.av?'<img class="av" src="'+p.av+'" alt="">':'<span class="av" aria-hidden="true">'+esc((p.name||"?").trim().charAt(0).toUpperCase())+'</span>'}
+var AVL=["🐶","🐱","🐼","🦊","🦁","🐯","🐸","🐧","🦉","🦋","🌻","🌷","🌸","🌳","🍎","🍓","⭐","🌈","⛵","🚲","🎵","🎹","☕","🏡"],avT=null;
+function openAv(id){avT=id;var q=save.pr[id];overlay('<h2>Choose a picture</h2><div class="avgrid">'+AVL.map(function(e){return'<button class="btn sm tg" data-ae="'+e+'" aria-pressed="'+(q.ae===e&&!q.av)+'">'+e+'</button>'}).join("")+'</div><input type="file" id="avf" accept="image/*" class="hidden"><div class="row"><button class="btn main" id="avu">Upload from my device</button></div><div class="row">'+((q.av||q.ae)?'<button class="btn sm" data-avx="t">Remove my photo</button>':'')+'<button class="btn sm" id="avb">Back</button></div>');
+ $("avu").onclick=function(){$("avf").click()};$("avb").onclick=openPl;$("avf").onchange=function(){var f=this.files[0];if(!f)return;shrink(f,function(dd){if(dd){save.pr[id].av=dd;delete save.pr[id].ae;persist();renderHome()}openPl()},96)}}
 function trophy(i){var c=["#E0A800","#A9B4BE","#C27A3C"][i],t=["Gold trophy","Silver trophy","Bronze trophy"][i];return '<svg class="tro" viewBox="0 0 24 24" role="img" aria-label="'+t+'"><path d="M7 3h10v5a5 5 0 0 1-10 0z" fill="'+c+'"/><path d="M7 5H3.5v1.5A3.5 3.5 0 0 0 7 10M17 5h3.5v1.5A3.5 3.5 0 0 1 17 10" fill="none" stroke="'+c+'" stroke-width="1.8"/><rect x="10.7" y="12.5" width="2.6" height="4" fill="'+c+'"/><rect x="7.5" y="17" width="9" height="3.2" rx="1" fill="'+c+'"/></svg>'}
 function breakHtml(){return '<b>Remind me to rest every</b><div class="prow">'+[10,15,20,30].map(function(m){return '<button class="btn tg" data-bn="'+m+'" aria-pressed="'+((save.bn||15)===m)+'">'+m+' min</button>'}).join("")+'</div>'}
 function addBreak(){if(!save.brk||$("ov").classList.contains("hidden"))return;var p=me(),t=dstr(),m=Math.floor(p.log.filter(function(x){return x.d===t}).reduce(function(a,x){return a+x.s},0)/60),n=Math.floor(m/(save.bn||15));if(!p.bk||p.bk.d!==t)p.bk={d:t,n:0};if(n>p.bk.n){p.bk.n=n;persist();var r=$("box").querySelector(".row");if(r)r.insertAdjacentHTML("beforebegin",'<p class="brk">You’ve played '+m+' minutes today – lovely! Time for a drink, a stretch or a rest.</p>')}}
