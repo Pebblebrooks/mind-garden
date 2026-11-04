@@ -134,7 +134,7 @@ html[data-hc="1"] .btn,html[data-hc="1"] .pill,html[data-hc="1"] .garden{border-
 .tg[aria-pressed="true"]{background:var(--back);color:#fff}
 .btn:not(.main):active,.lv:not([disabled]):active{background:var(--bg2);color:var(--ink)}
 /* hud icons, dots, collapsible headers, continue card, leaderboard */
-.hud .ic{min-width:48px;padding:2px 10px;font-size:1.15em}.hud #bPause{margin-left:auto}
+.hud .ic{min-width:48px;padding:2px 10px;font-size:1.15em}.hud #bPause,.hud #bPause2{margin-left:auto}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .dots i{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid var(--back);margin:0 3px;vertical-align:middle}
 .dots i.c{background:var(--back)}.dots i.d{background:var(--leaf);border-color:var(--leaf)}.dots i.m{background:var(--soft);border-color:var(--soft)}
@@ -177,7 +177,7 @@ html[data-th="sand"][data-theme="dark"]{--bg:#241A12;--bg2:#2E2218;--ink:#F6EBDD
     <button class="btn sm ic" id="bPause" aria-label="Pause">⏸</button>
   </div>
   <div class="msg" id="msg" aria-live="polite"></div>
-  <div class="grid" id="grid"></div></section><section id="mini" class="hidden"><div class="hud"><button class="btn sm ic" id="bMn" aria-label="Menu">☰</button><span class="pill" id="hLv2"></span><span class="pill" id="hRound"></span></div><div class="msg" id="mmsg" aria-live="polite"></div><div id="mp"></div>
+  <div class="grid" id="grid"></div></section><section id="mini" class="hidden"><div class="hud"><button class="btn sm ic" id="bMn" aria-label="Menu">☰</button><span class="pill" id="hLv2"></span><span class="pill" id="hRound"></span><button class="btn sm ic" id="bPause2" aria-label="Pause">⏸</button></div><div class="msg" id="mmsg" aria-live="polite"></div><div id="mp"></div>
 </section>
 </div>
 
@@ -213,6 +213,7 @@ var cur=0,left=0,total=0,first=null,lock=true,found=0,timer=null,paused=false,hi
 // sound
 var ac=null;
 function beep(f,d,type){if(!save.snd)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();var o=ac.createOscillator(),g=ac.createGain();o.type=type||"sine";o.frequency.value=f;g.gain.setValueAtTime(.12,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
+function pt(fn,ms){setTimeout(function w(){if(paused)setTimeout(w,150);else fn()},ms)}
 function chime(){beep(660,.18);setTimeout(function(){beep(880,.28)},120)}
 function win(){[523,659,784,1047].forEach(function(f,i){setTimeout(function(){beep(f,.35)},i*150)})}
 
@@ -251,7 +252,7 @@ function start(i){
   show("game");
   var n=L.peek;
   (function tick(){
-    if(n>0){$("msg").textContent="Look carefully… cards turn over in "+n;n--;setTimeout(tick,1000)}
+    if(n>0){$("msg").textContent="Look carefully… cards turn over in "+n;n--;pt(tick,1000)}
     else{[].forEach.call(g.children,function(c){c.classList.remove("up")});$("msg").textContent=bonus?"Extra "+bonus+" seconds added. Tap a card to begin.":"Tap a card to begin.";lock=false;run()}
   })();
 }
@@ -276,10 +277,10 @@ $("grid").addEventListener("click",function(ev){
     a.classList.add("ok");b.classList.add("ok");found++;streak++;chime();
     $("hPairs").textContent=found+" / "+LEVELS[cur].p+" pairs";
     $("msg").textContent=PRAISE[Math.floor(Math.random()*PRAISE.length)]+(streak>=3?" "+streak+" in a row!":"");
-    if(found===LEVELS[cur].p){lock=true;clearInterval(timer);setTimeout(function(){end(true)},800)}
+    if(found===LEVELS[cur].p){lock=true;clearInterval(timer);pt(function(){end(true)},800)}
   }else{
     lock=true;streak=0;$("msg").textContent="Not quite – have another look.";
-    setTimeout(function(){a.classList.remove("up");b.classList.remove("up");lock=false},1100);
+    pt(function(){a.classList.remove("up");b.classList.remove("up");lock=false},1100);
   }
 });
 $("bHint").onclick=function(){
@@ -290,16 +291,16 @@ $("bHint").onclick=function(){
   hints--;this.textContent="Hint ("+hints+")";lock=true;
   pair.forEach(function(c){c.classList.add("up")});
   $("msg").textContent="Remember where this pair is…";
-  setTimeout(function(){pair.forEach(function(c){c.classList.remove("up")});lock=false;$("msg").textContent=""},1800);
+  pt(function(){pair.forEach(function(c){c.classList.remove("up")});lock=false;$("msg").textContent=""},1800);
 };
 $("bPause").onclick=function(){
-  if(lock&&!paused)return;
+  if(paused||!$("ov").classList.contains("hidden"))return;
   paused=true;
   overlay('<h2>Paused</h2><p>Your time is stopped. Rest as long as you like.</p><div class="row"><button class="btn main" id="rs">Keep playing</button><button class="btn" id="mn">Back to menu</button></div>');
   $("rs").onclick=function(){paused=false;closeOv()};
   $("mn").onclick=function(){paused=false;clearInterval(timer);closeOv();toHome()};
 };
-function toHome(){clearInterval(timer);closeOv();renderHome();show("home")}
+function toHome(){paused=false;clearInterval(timer);closeOv();renderHome();show("home")}
 $("bHome").onclick=function(){if(!$("ov").classList.contains("hidden"))return;paused=true;overlay('<h2>Leave this game?</h2><p>Your progress in this round will be lost.</p><div class="row"><button class="btn main" id="st">Stay</button><button class="btn" id="lv">Leave</button></div>');$("st").onclick=function(){paused=false;closeOv()};$("lv").onclick=function(){paused=false;toHome()}};
 
 function end(ok){
@@ -475,7 +476,7 @@ function pick(a,n){return shuffle(a.slice()).slice(0,n)}
 function lit(el,ms){el.classList.add("on");setTimeout(function(){el.classList.remove("on")},ms||300)}
 function startMG(t){
   try{ac&&ac.resume()}catch(x){}
-  mg={t:t,r:0,R:t==="sort"?8:6,ok:0,n:t==="seq"?3:4,lo:t==="seq"?2:4,h:null,hist:[]};mt0=Date.now();me().lg={k:t};persist();
+  mg={t:t,r:0,R:t==="sort"?8:6,ok:0,n:t==="seq"?3:4,lo:t==="seq"?2:4,h:null,hist:[]};paused=false;mt0=Date.now();me().lg={k:t};persist();
   closeOv();show("mini");$("hLv2").textContent=MG[t].n;nextR();
 }
 function nextR(){
@@ -489,7 +490,7 @@ function res(good,note){
   var ch=g.last;if(g.t==="wrd")ch=null;
   if(ch&&ch.isConnected){ch.classList.add(good?"right":"wrong");if(!good&&g.ans!=null)[].forEach.call($("mp").querySelectorAll("[data-a]"),function(x){if(x.dataset.a===g.ans)x.classList.add("right")})}
   good?chime():beep(300,.3,"triangle");$("mmsg").textContent=note;
-  setTimeout(function(){if(mg===g)nextR()},1900);
+  pt(function(){if(mg===g)nextR()},1900);
 }
 function rSeq(){
   var g=mg,n=g.n,k=n>5?6:4,it=pick(allItems(),k),s=[],pos=0,i=0;
@@ -499,7 +500,7 @@ function rSeq(){
   (function go(){
     if(mg!==g)return;
     if(i>=s.length){$("mmsg").textContent="Your turn – tap them in the same order.";g.h=function(x){var j=+x.dataset.a;lit(b[j]);say(it[j].n);if(j!==s[pos])return res(false,"Not quite. That’s fine – the next one will be a little different.");pos++;if(pos===s.length)res(true,"Perfect – all "+n+" in the right order!")};return}
-    var j=s[i++];lit(b[j],600);say(it[j].n);setTimeout(go,1000);
+    var j=s[i++];lit(b[j],600);say(it[j].n);pt(go,1000);
   })();
 }
 function rMiss(){
@@ -508,7 +509,7 @@ function rMiss(){
   $("mp").innerHTML='<div class="gridm" style="--c:'+cols+'">'+it.map(cell).join("")+'</div>';
   (function tick(){
     if(mg!==g)return;
-    if(c>0){$("mmsg").textContent="Remember these… "+c;c--;setTimeout(tick,1000);return}
+    if(c>0){$("mmsg").textContent="Remember these… "+c;c--;pt(tick,1000);return}
     var opts=shuffle([it[m]].concat(pick(it.filter(function(x,i){return i!==m}),Math.min(3,n-1))));
     $("mp").innerHTML='<div class="gridm" style="--c:'+cols+'">'+it.map(function(x,i){return i===m?'<div class="big st q">?</div>':cell(x)}).join("")+'</div><div class="gridm" style="--c:'+opts.length+'">'+opts.map(function(x){return '<button class="big" data-a="'+x.e+'" aria-label="'+x.n+'">'+x.e+'</button>'}).join("")+'</div>';
     $("mmsg").textContent="One has disappeared. Which one was it?";
@@ -521,8 +522,12 @@ function rSort(){
   $("mmsg").textContent="Which group does the "+x.n+" belong to?";say(x.n);
   mg.ans=a;mg.h=function(b){var ok=b.dataset.a===a;res(ok,ok?"Yes – well done!":"It goes with “"+a+"”. Well tried!")};
 }
-$("mp").addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(b&&!b.disabled&&b.classList.contains("big"))lit(b,450);if(b&&mg&&mg.h){mg.last=b;mg.h(b)}});
+$("mp").addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(b&&!b.disabled&&b.classList.contains("big"))lit(b,450);if(b&&mg&&mg.h&&!paused){mg.last=b;mg.h(b)}});
 $("bMn").onclick=function(){mg=null;toHome()};
+$("bPause2").onclick=function(){if(!mg||paused||!$("ov").classList.contains("hidden"))return;paused=true;var ps=Date.now();
+  overlay('<h2>Paused</h2><p>Your time is stopped. Rest as long as you like.</p><div class="row"><button class="btn main" id="rs2">Keep playing</button><button class="btn" id="mn2">Back to menu</button></div>');
+  $("rs2").onclick=function(){mt0+=Date.now()-ps;paused=false;closeOv()};
+  $("mn2").onclick=function(){mg=null;toHome()}};
 function mdone(){
   var g=mg,secs=Math.round((Date.now()-mt0)/1000);logPlay(g.t,g.ok/g.R,secs);award(g.ok,g.ok===g.R?g.t:null,secs);win();
   overlay('<h2>Well done!</h2><p>You got '+g.ok+' of '+g.R+' right.</p><div class="row"><button class="btn main" id="ma">Play again</button><button class="btn" id="mm">Menu</button></div>');
@@ -532,10 +537,13 @@ addEventListener("resize",function(){var g=$("grid");if($("game").classList.cont
 
 function award(c,key,secs){var p=me();p.ok=(p.ok||0)+c;if(key){p.bt=p.bt||{};if(!p.bt[key]||secs<p.bt[key])p.bt[key]=Math.max(1,secs)}persist()}
 function lbView(key){
- key=key||"all";var rows=Object.keys(save.pr).map(function(id){var p=save.pr[id],bt=p.bt||{},m=Object.keys(bt).reduce(function(a,k){return a===null||bt[k]<a?bt[k]:a},null);return{n:p.name,me:id===save.cp,ok:p.ok||0,g:(p.log||[]).length,t:key==="all"?m:bt[key]}});
- rows.sort(key==="all"?function(a,b){return b.ok-a.ok||b.g-a.g}:function(a,b){return(a.t||1e9)-(b.t||1e9)});
- var md=["🥇","🥈","🥉"],opts=[["all","Overall – correct answers"]].concat(Object.keys(MG).map(function(k){return[k,MG[k].n]})).concat([1,2,3,4,5,6].map(function(n){return["p"+n,"Matching pairs – Level "+n]}));
- overlay('<h2>Leaderboard</h2><label class="lab">Ranking<select id="lbs">'+opts.map(function(o){return'<option value="'+o[0]+'"'+(o[0]===key?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></label><div class="list">'+rows.map(function(r,i){var has=key==="all"?r.ok:r.t;return'<div class="lbr'+(r.me?" me":"")+'"><span class="rk">'+((has&&md[i])||i+1)+'</span><b>'+esc(r.n)+'</b><span>'+(key==="all"?r.ok+" correct"+(r.t?"<br><small>Best time: "+fmt(r.t)+"</small>":""):(r.t?fmt(r.t):"—"))+'</span></div>'}).join("")+'</div><p class="tip">Best times count games with every answer correct.</p><div class="row"><button class="btn main" id="lbd">Done</button></div>');
+ key=key||"all";var ids=Object.keys(save.pr),keys={},pts={};
+ ids.forEach(function(id){var b=save.pr[id].bt||{};for(var k in b)keys[k]=1});
+ Object.keys(keys).forEach(function(k){ids.filter(function(id){return(save.pr[id].bt||{})[k]}).sort(function(a,b){return save.pr[a].bt[k]-save.pr[b].bt[k]}).forEach(function(id,i){pts[id]=(pts[id]||0)+ids.length-i})});
+ var rows=ids.map(function(id){var p=save.pr[id],bt=p.bt||{},m=Object.keys(bt).reduce(function(a,k){return a===null||bt[k]<a?bt[k]:a},null);return{n:p.name,me:id===save.cp,pts:pts[id]||0,t:key==="all"?m:bt[key]}});
+ rows.sort(key==="all"?function(a,b){return b.pts-a.pts||(a.t||1e9)-(b.t||1e9)}:function(a,b){return(a.t||1e9)-(b.t||1e9)});
+ var md=["🥇","🥈","🥉"],opts=[["all","Overall – fastest all-correct times"]].concat(Object.keys(MG).map(function(k){return[k,MG[k].n]})).concat([1,2,3,4,5,6].map(function(n){return["p"+n,"Matching pairs – Level "+n]}));
+ overlay('<h2>Leaderboard</h2><label class="lab">Ranking<select id="lbs">'+opts.map(function(o){return'<option value="'+o[0]+'"'+(o[0]===key?" selected":"")+'>'+o[1]+'</option>'}).join("")+'</select></label><div class="list">'+rows.map(function(r,i){var has=key==="all"?r.pts:r.t;return'<div class="lbr'+(r.me?" me":"")+'"><span class="rk">'+((has&&md[i])||i+1)+'</span><b>'+esc(r.n)+'</b><span>'+(key==="all"?r.pts+" pts"+(r.t?"<br><small>Best time: "+fmt(r.t)+"</small>":""):(r.t?fmt(r.t):"—"))+'</span></div>'}).join("")+'</div><p class="tip">Ranked by fastest games with every answer correct. Overall adds points for each game.</p><div class="row"><button class="btn main" id="lbd">Done</button></div>');
  $("lbs").onchange=function(){lbView(this.value)};$("lbd").onclick=closeOv;
 }
 $("bLb").onclick=function(){lbView()};
