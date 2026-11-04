@@ -159,6 +159,12 @@ html[data-th="sand"][data-theme="dark"]{--bg:#241A12;--bg2:#2E2218;--ink:#F6EBDD
 .th .btn{position:absolute;top:-8px;right:-8px;min-height:26px;min-width:26px;padding:0;font-size:.7em;border-radius:50%}
 .f.a img{width:88%;height:88%;object-fit:cover;border-radius:14px}
 .dpp{display:flex;flex-direction:column;gap:6px;border:3px solid var(--line);border-radius:20px;padding:8px}.dpp.t{border-style:dashed;border-color:var(--back)}.dpp .lbl{text-align:center;font-weight:700;font-size:.9em}
+.tools{align-items:center}.tools .btn,#cont .btn{height:42px;min-height:42px;padding:0 16px;font-size:.8em;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;box-sizing:border-box}
+#cont{align-items:center}#cont #bContX{width:42px;min-width:42px;padding:0;font-size:.9em}
+@font-face{font-family:"Punct";src:local("Arial"),local("Helvetica Neue"),local("Helvetica"),local("Roboto");unicode-range:U+2018-2019}
+body,button,input,select{font-family:"Punct","Atkinson Hyperlegible",Verdana,Tahoma,"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC","WenQuanYi Micro Hei",sans-serif}
+html[lang^=zh] body,html[lang^=zh] button{font-family:"Punct","Atkinson Hyperlegible","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif}
+.brk{background:color-mix(in srgb,var(--leaf) 14%,var(--panel));border:2px solid var(--leaf);border-radius:14px;padding:10px 14px;font-weight:700;margin:14px 0 0}
 </style>
 </head>
 <body>
@@ -201,9 +207,15 @@ var LEVELS=[
  {p:12,t:210,peek:5,name:"Master gardener"}
 ];
 var DECKS={garden:["🌻|sunflower","🍎|apple","🐦|bird","🚲|bicycle","☕|coffee cup","🎵|music note","🏡|house","🐶|dog","🦋|butterfly","🍰|cake","🌈|rainbow","⛵|sailboat"],music:["🎹|piano","🎻|violin","🎺|trumpet","🥁|drum","🎸|guitar","🎷|saxophone","🎤|microphone","🔔|bell","🎧|headphones","📻|radio","🎼|sheet music","🎶|melody"],home:["☎️|telephone","🕰️|clock","🧵|thread","🔑|key","🧺|basket","🛋️|sofa","📷|camera","🕯️|candle","🧭|compass","📺|television","🧶|wool","🍳|frying pan"],nature:["🌷|tulip","🍁|maple leaf","🌲|pine tree","🐝|bee","🌙|moon","☀️|sun","⭐|star","🍄|mushroom","🐢|turtle","🐟|fish","🌊|wave","🦉|owl"]};
-var DN={garden:"Garden",music:"Music",home:"Around the home",nature:"Nature",photos:"My photos"};
+var DN={garden:"Garden",music:"Music",home:"Around the home",nature:"Nature",food:"Food",festive:"Festivals",photos:"My photos"};
+DECKS.garden=DECKS.garden.concat(["🌹|rose","🌼|daisy","🌳|tree","🥕|carrot","🍅|tomato","🌽|corn","🐞|ladybird","🐌|snail"]);
+DECKS.music=DECKS.music.concat(["🎙️|studio microphone","💿|disc","🎭|theatre masks","💃|dancer","🎬|clapper board","🎪|circus tent","🎠|carousel"]);
+DECKS.home=DECKS.home.concat(["🚪|door","🛁|bathtub","🧹|broom","💡|light bulb","⏰|alarm clock","👓|glasses","☂️|umbrella","✂️|scissors"]);
+DECKS.nature=DECKS.nature.concat(["🐘|elephant","🐒|monkey","🦁|lion","🐧|penguin","🐸|frog","🦆|duck","🐙|octopus","⛰️|mountain"]);
+DECKS.food=["🍜|noodles","🍚|rice","🥟|dumpling","🍤|prawn","🥭|mango","🍉|watermelon","🍍|pineapple","🥥|coconut","🥚|egg","🍞|bread","🍵|tea","🍦|ice cream","🍲|soup","🍿|popcorn","🍪|cookie","🍑|peach","🍋|lemon","🍒|cherries","🍐|pear","🍯|honey"];
+DECKS.festive=["🏮|lantern","🧧|red packet","🎆|fireworks","🎇|sparkler","🎁|gift","🎈|balloon","🎉|party popper","🎂|birthday cake","🎄|christmas tree","🎀|ribbon","🥮|mooncake","🐲|dragon","🎊|confetti ball","👑|crown","🏆|trophy"];
 function P(s){var a=s.split("|");return{e:a[0],n:a[1]}}
-function icons(){if(save.deck==="photos"&&(save.photos||[]).length>=6){var ph=shuffle((save.photos||[]).map(function(p,i){return{k:"ph"+i,e:"📷",h:'<img src="'+p.d+'" alt="">',n:"photo"}}));return ph.concat(DECKS.garden.map(P))}return DECKS[save.deck&&save.deck!=="photos"?save.deck:"garden"].map(P)}
+function icons(){if(save.deck==="photos"&&(save.photos||[]).length>=6){var ph=shuffle((save.photos||[]).map(function(p,i){return{k:"ph"+i,e:"📷",h:'<img src="'+p.d+'" alt="">',n:"photo"}}));return ph.concat(DECKS.garden.map(P))}return shuffle(DECKS[save.deck&&save.deck!=="photos"?save.deck:"garden"].map(P))}
 var LN={garden:["First blooms","Garden path","Sunny border","Greenhouse","Orchard","Master gardener"],music:["Warm-up","First verse","Chorus","Duet","Orchestra","Maestro"],home:["Front door","Hallway","Living room","Kitchen","Attic treasures","Memory lane"],nature:["First steps","Woodland path","Meadow","Riverbank","Mountain trail","Nature expert"]};
 var PRAISE=["Lovely match!","Well spotted!","Sharp eyes!","That’s a pair!","Nicely done!"];
 var COLS={3:3,4:4,6:4,8:4,10:5,12:6};
@@ -343,14 +355,14 @@ var MG={seq:{n:"Remember the order",d:"Watch the pictures light up, then repeat 
 function renderExtra(){
   var p=me(),s=curStreak(p),em=s<3?"🌱":s<7?"🌿":s<14?"🌷":"🌻";
   $("bPl").textContent="Player: "+p.name;$("decks").innerHTML="<b>Choose pictures:</b>"+Object.keys(DN).filter(function(k){return k!=="photos"||(save.photos||[]).length>=6}).map(function(k){return '<button class="btn sm tg" data-d="'+k+'" aria-pressed="'+((save.deck||"garden")===k)+'">'+DN[k]+"</button>"}).join("");
-  $("garden").innerHTML='<div class="gr" aria-hidden="true">'+(s?new Array(Math.min(s,14)+1).join(em):"🌰")+'</div><div><b>'+(s?s+"-day streak":"Play today to plant your first seed")+'</b><br><small>'+(s?(p.last===dstr()?"Today’s game is done ✓":"Play today to keep your garden growing"):"Each day you play, your garden grows.")+'</small></div>';
+  var tmn=Math.round(p.log.filter(function(x){return x.d===dstr()}).reduce(function(a,x){return a+x.s},0)/60);$("garden").innerHTML='<div class="gr" aria-hidden="true">'+(s?new Array(Math.min(s,14)+1).join(em):"🌰")+'</div><div><b>'+(s?s+"-day streak":"Play today to plant your first seed")+'</b><br><small>'+(s?(p.last===dstr()?"Today’s game is done ✓":"Play today to keep your garden growing"):"Each day you play, your garden grows.")+(tmn?"<br>Today: "+tmn+" min":"")+'</small></div>';
   ["acts","acts2","acts3"].forEach(function(id,gi){$(id).innerHTML=Object.keys(MG).filter(function(k){return(MG[k].g||0)===gi}).map(function(k){var m=MG[k];return '<button class="lv" data-g="'+k+'"><span class="n" style="background:var(--back)">'+m.ic+'</span><b>'+m.n+'</b><small>'+m.d+'</small></button>'}).join("")});
 }
 ["acts","acts2","acts3"].forEach(function(id){$(id).addEventListener("click",function(e){var b=e.target.closest(".lv");if(b)startMG(b.dataset.g)})});
 /* ---------- settings & players ---------- */
-var SET=[["snd","Sound"],["speak","Spoken picture names"],["fs","Larger text"],["hc","Large high-contrast mode"],["cb","Colour-blind-safe colours"],["lh","Left-handed layout"]];
+var SET=[["snd","Sound"],["speak","Spoken picture names"],["fs","Larger text"],["hc","Large high-contrast mode"],["cb","Colour-blind-safe colours"],["lh","Left-handed layout"],["brk","Break reminders"]];
 function openSet(){
-  overlay('<h2>Settings</h2><div class="list">'+SET.map(function(s){return '<button class="btn tg" data-k="'+s[0]+'" aria-pressed="'+!!save[s[0]]+'">'+s[1]+': <b>'+(save[s[0]]?"On":"Off")+'</b></button>'}).join("")+'</div><b>Appearance</b><div class="prow">'+[["auto","Match device"],["light","Light"],["dark","Dark"]].map(function(t){return '<button class="btn tg" data-m="'+t[0]+'" aria-pressed="'+((save.mode||"auto")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div><b>Colour theme</b><div class="prow">'+[["cream","Cream and teal"],["sand","Warm sand"]].map(function(t){return '<button class="btn tg" data-th="'+t[0]+'" aria-pressed="'+((save.th||"cream")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div>'+photosHtml()+'<div class="row"><button class="btn main" id="sd">Done</button></div>');
+  overlay('<h2>Settings</h2><div class="list">'+SET.map(function(s){return '<button class="btn tg" data-k="'+s[0]+'" aria-pressed="'+!!save[s[0]]+'">'+s[1]+': <b>'+(save[s[0]]?"On":"Off")+'</b></button>'}).join("")+'</div><b>Appearance</b><div class="prow">'+[["auto","Match device"],["light","Light"],["dark","Dark"]].map(function(t){return '<button class="btn tg" data-m="'+t[0]+'" aria-pressed="'+((save.mode||"auto")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div><b>Colour theme</b><div class="prow">'+[["cream","Cream and teal"],["sand","Warm sand"]].map(function(t){return '<button class="btn tg" data-th="'+t[0]+'" aria-pressed="'+((save.th||"cream")===t[0])+'">'+t[1]+'</button>'}).join("")+'</div>'+breakHtml()+photosHtml()+'<div class="row"><button class="btn main" id="sd">Done</button></div>');
   $("sd").onclick=closeOv;$("pha").onclick=function(){$("phf").click()};$("phf").onchange=function(){addPhotos(this.files)};
 }
 function openPl(){
@@ -360,7 +372,9 @@ function openPl(){
   $("pa").onclick=function(){var n=$("pn").value.trim();if(!n){$("pn").focus();return}persist();var id="p"+Date.now();save.pr[id]=newP(n);save.cp=id;load();persist();renderHome();openPl()};
 }
 $("box").addEventListener("click",function(e){
-  var b=e.target.closest("button[data-k],button[data-d],button[data-p],button[data-x],button[data-th],button[data-m],button[data-ph],button[data-fc]");if(!b)return;var d=b.dataset;
+  var b=e.target.closest("button[data-k],button[data-d],button[data-p],button[data-x],button[data-th],button[data-m],button[data-ph],button[data-fc],button[data-pha],button[data-bn]");if(!b)return;var d=b.dataset;
+  if(d.bn){save.bn=+d.bn;persist();openSet();return}
+  if(d.pha){if(!b.dataset.sure){b.dataset.sure=1;b.textContent="Tap again to remove";return}save.photos=[];if(save.deck==="photos")save.deck="garden";persist();renderHome();openSet();return}
   if(d.ph){save.photos.splice(+d.ph,1);if(save.photos.length<6&&save.deck==="photos")save.deck="garden";persist();renderHome();openSet();return}
   if(d.fc){if(!b.dataset.sure){b.dataset.sure=1;b.textContent="Tap again to clear";return}var q=save.pr[d.fc];q.log=[];q.streak=0;q.last="";q.gp=0;q.bt={};persist();renderHome();famView();return}
   if(d.m){save.mode=d.m;persist();applyPrefs();openSet();return}
@@ -546,7 +560,10 @@ addEventListener("resize",function(){var g=$("grid");if($("game").classList.cont
 
 function award(c,key,secs){var p=me();p.ok=(p.ok||0)+c;p.gp=(p.gp||0)+1;if(key){p.bt=p.bt||{};if(!p.bt[key]||secs<p.bt[key])p.bt[key]=Math.max(1,secs)}persist()}
 function trophy(i){var c=["#E0A800","#A9B4BE","#C27A3C"][i],t=["Gold trophy","Silver trophy","Bronze trophy"][i];return '<svg class="tro" viewBox="0 0 24 24" role="img" aria-label="'+t+'"><path d="M7 3h10v5a5 5 0 0 1-10 0z" fill="'+c+'"/><path d="M7 5H3.5v1.5A3.5 3.5 0 0 0 7 10M17 5h3.5v1.5A3.5 3.5 0 0 1 17 10" fill="none" stroke="'+c+'" stroke-width="1.8"/><rect x="10.7" y="12.5" width="2.6" height="4" fill="'+c+'"/><rect x="7.5" y="17" width="9" height="3.2" rx="1" fill="'+c+'"/></svg>'}
-function photosHtml(){var ph=save.photos||[];return '<b>My photos for Matching pairs</b><p class="tip">Photos stay on this device. Add at least 6, then choose “My photos” in Matching pairs.</p><div class="thumbs">'+ph.map(function(p,i){return '<span class="th"><img src="'+p.d+'" alt=""><button class="btn sm ic" data-ph="'+i+'" aria-label="Remove photo">✕</button></span>'}).join("")+'</div><input type="file" id="phf" accept="image/*" multiple class="hidden"><button class="btn sm" id="pha">Add photos</button>'}
+function breakHtml(){return '<b>Remind me to rest every</b><div class="prow">'+[10,15,20,30].map(function(m){return '<button class="btn tg" data-bn="'+m+'" aria-pressed="'+((save.bn||15)===m)+'">'+m+' min</button>'}).join("")+'</div>'}
+function addBreak(){if(!save.brk||$("ov").classList.contains("hidden"))return;var p=me(),t=dstr(),m=Math.floor(p.log.filter(function(x){return x.d===t}).reduce(function(a,x){return a+x.s},0)/60),n=Math.floor(m/(save.bn||15));if(!p.bk||p.bk.d!==t)p.bk={d:t,n:0};if(n>p.bk.n){p.bk.n=n;persist();var r=$("box").querySelector(".row");if(r)r.insertAdjacentHTML("beforebegin",'<p class="brk">You’ve played '+m+' minutes today – lovely! Time for a drink, a stretch or a rest.</p>')}}
+var _end=end;end=function(ok){_end(ok);addBreak()};var _md=mdone;mdone=function(){_md();addBreak()};
+function photosHtml(){var ph=save.photos||[];return '<b>My photos for Matching pairs</b><p class="tip">Photos stay on this device. Add at least 6, then choose “My photos” in Matching pairs.</p><div class="thumbs">'+ph.map(function(p,i){return '<span class="th"><img src="'+p.d+'" alt=""><button class="btn sm ic" data-ph="'+i+'" aria-label="Remove photo">✕</button></span>'}).join("")+'</div>'+(ph.length?'<button class="btn sm" data-pha="1">Remove all photos</button> ':'')+'<input type="file" id="phf" accept="image/*" multiple class="hidden"><button class="btn sm" id="pha">Add photos</button>'}
 function shrink(f,cb){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var m=Math.min(im.width,im.height),c=document.createElement("canvas");c.width=c.height=192;c.getContext("2d").drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,192,192);cb(c.toDataURL("image/jpeg",.78))};im.onerror=function(){cb(null)};im.src=r.result};r.onerror=function(){cb(null)};r.readAsDataURL(f)}
 function addPhotos(fl){save.photos=save.photos||[];var q=[].slice.call(fl).slice(0,24-save.photos.length);(function nx(){var f=q.shift();if(!f){persist();renderHome();openSet();return}shrink(f,function(d){if(d&&save.photos.length<24)save.photos.push({d:d,n:"photo"});nx()})})()}
 function lbView(key){
@@ -567,7 +584,7 @@ var _re=renderExtra;renderExtra=function(){_re();renderCont()};
 function renderCont(){var lg=me().lg,ok=lg&&(lg.k!=="p"||lg.i<save.unlocked)&&(lg.k==="p"||MG[lg.k]);$("cont").classList.toggle("hidden",!ok)}
 $("bCont").onclick=function(){var lg=me().lg;if(!lg)return;try{ac&&ac.resume()}catch(x){}lg.k==="p"?start(lg.i):startMG(lg.k)};
 $("bContX").onclick=function(){me().lg=null;persist();renderCont()};
-save.col=save.col||{};
+save.col=save.col||{};if(save.brk===undefined)save.brk=1;
 [].forEach.call(document.querySelectorAll("#home h2.sec"),function(h,i){
  var body=[],n=h.nextElementSibling;while(n&&n.tagName!=="H2"&&!n.classList.contains("tip")){body.push(n);n=n.nextElementSibling}
  h.tabIndex=0;h.setAttribute("role","button");
