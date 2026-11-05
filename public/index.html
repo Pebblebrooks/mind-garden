@@ -229,17 +229,22 @@ h2.sec{width:fit-content;max-width:100%;margin-left:auto;margin-right:auto;paddi
 .mfab[aria-pressed="true"] .mi{animation:mnote 2.6s ease-in-out infinite}
 @keyframes mnote{50%{transform:translateY(-3px) rotate(-10deg)}}
 html[data-still="1"] .mfab .mi{animation:none!important}
+
+/* ---- sticky navbar ---- */
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 84px)}
+#nav{position:sticky;top:max(8px,env(safe-area-inset-top,0px));z-index:3;margin:0 0 6px;padding:8px 12px;border-radius:20px;border:2px solid var(--line);background:color-mix(in srgb,var(--panel) 90%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+@media (max-width:640px){#nav{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:6px 8px;border-radius:16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}#nav::-webkit-scrollbar{display:none}#nav .btn{flex:0 0 auto}}
 </style>
 </head>
 <body>
 <div id="gbg" aria-hidden="true"></div>
 <div class="wrap">
 <section id="home">
-  <div class="top"><h1>Mind Garden</h1>
-    <div class="tools">
+  <div class="tools" id="nav">
       <button class="btn sm" id="bPl"></button><span id="cont" class="hidden"><button class="btn sm" id="bCont" aria-label="Continue last game"><span aria-hidden="true">▶</span> Continue</button><button class="btn sm ic" id="bContX" aria-label="Forget last game">✕</button></span><button class="btn sm" id="bFam">Family view</button><button class="btn sm" id="bLb">Leaderboard</button>
-      <button class="btn sm" id="bSet">Settings</button><button class="btn sm" id="bMus"><span aria-hidden="true">♪</span> Music</button><button class="btn sm" id="bLang" aria-label="Language / 语言"></button>
-    </div></div>
+      <button class="btn sm" id="bSet">Settings</button><button class="btn sm" id="bAll"><span aria-hidden="true">▾</span> Collapse all</button><button class="btn sm" id="bMus"><span aria-hidden="true">♪</span> Music</button><button class="btn sm" id="bLang" aria-label="Language / 语言"></button>
+    </div>
+  <div class="top"><h1>Mind Garden</h1></div>
   <p class="sub">Gentle games for memory, numbers, logic and shapes. Take your time – there are no wrong turns here. Play a little each day and watch your garden grow.</p>
   <div id="hero" class="hero"></div><div class="garden hidden" id="garden"></div><h2 class="sec">Memory games</h2><div class="zw"><div class="zoo" aria-hidden="true"></div><div class="levels" id="acts"></div></div><h2 class="sec">Numbers</h2><div class="zw"><div class="zoo" aria-hidden="true"></div><div class="levels" id="acts2"></div></div><h2 class="sec">Logic</h2><div class="zw"><div class="zoo" aria-hidden="true"></div><div class="levels" id="acts3"></div></div><h2 class="sec">Shapes and time</h2><div class="zw"><div class="zoo" aria-hidden="true"></div><div class="levels" id="acts4"></div></div><h2 class="sec">Observation</h2><div class="zw"><div class="zoo" aria-hidden="true"></div><div class="levels" id="acts5"></div></div><h2 class="sec">Words</h2><div class="zw"><div class="zoo" aria-hidden="true"></div><div class="levels" id="acts6"></div></div><h2 class="sec" id="mph">Matching pairs</h2><div class="zw"><div class="zoo" aria-hidden="true"></div><div class="decks" id="decks"></div><div class="levels" id="levels"></div></div>
   <p class="tip">Playing a little each day keeps the mind active. Short, regular sessions work best.</p>
@@ -845,8 +850,11 @@ save.cl7=save.cl7||{};if(save.brk===undefined)save.brk=1;
  var body=[],n=h.nextElementSibling;while(n&&n.tagName!=="H2"&&!n.classList.contains("tip")){body.push(n);n=n.nextElementSibling}
  h.tabIndex=0;h.setAttribute("role","button");
  function set(c){h.setAttribute("aria-expanded",!c);body.forEach(function(b){b.classList.toggle("hidden",c)})}
- function tg(){save.cl7[i]=!save.cl7[i];set(save.cl7[i]);persist()}
+ function tg(){save.cl7[i]=!save.cl7[i];set(save.cl7[i]);persist();window.secSync&&secSync()}
  h.onclick=tg;h.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();tg()}};set(!!save.cl7[i])});
+function secAll(c){[].forEach.call(document.querySelectorAll("#home h2.sec"),function(h,i){save.cl7[i]=c?1:0;h.setAttribute("aria-expanded",!c);var n=h.nextElementSibling;while(n&&n.tagName!=="H2"&&!n.classList.contains("tip")){n.classList.toggle("hidden",c);n=n.nextElementSibling}});persist();secSync()}
+function secSync(){var any=[].some.call(document.querySelectorAll("#home h2.sec"),function(h){return h.getAttribute("aria-expanded")!=="false"});$("bAll").innerHTML='<span aria-hidden="true">'+(any?"\u25BE":"\u25B8")+'</span> '+(any?"Collapse all":"Expand all");$("bAll").dataset.c=any?"1":"0"}
+window.secSync=secSync;$("bAll").onclick=function(){var c=this.dataset.c==="1";secAll(c);if(!c)window.scrollTo({top:0,behavior:"smooth"})};secSync();
 renderCont();
 $("bPl").onclick=openPl;$("bSet").onclick=openSet;$("bFam").onclick=famView;
 load();applyPrefs();renderHome();
